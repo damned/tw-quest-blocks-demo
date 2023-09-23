@@ -94,3 +94,6 @@ crashlytics-build.properties
 # Format files
 *.preformat.bak
 *.preformat.bak.meta
+
+*_BackUpThisFolder_ButDontShipItWithYourGame/
+
