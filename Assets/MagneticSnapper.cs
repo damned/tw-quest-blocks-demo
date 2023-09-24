@@ -21,9 +21,6 @@ public class MagneticSnapper : MonoBehaviour
         defaultMaterial = meshRenderer.material;
         shadowBlockMagnetAlignmentHandle = shadowBlock.transform.parent.gameObject;
         Debug.Log("Default material: " + defaultMaterial);
-
-        LinkBlocks(thisBlock, shadowBlock);
-        InvokeRepeating("UnlinkExample", 5, 0);
     }
 
     void Update()
@@ -32,11 +29,6 @@ public class MagneticSnapper : MonoBehaviour
         {
             MoveMagnetAlignmentHandleToFaceMagnet(oppositeMagnetTransform);
         }
-    }
-
-    void UnlinkExample()
-    {
-        UnlinkBlocks(thisBlock, shadowBlock);
     }
 
     void UnlinkBlocks(GameObject thisBlock, GameObject otherBlock)
@@ -57,18 +49,38 @@ public class MagneticSnapper : MonoBehaviour
         shadowBlock.GetComponent<Collider>().enabled = true;
     }
 
+    void LinkShadowBlockToOtherBlock(GameObject shadowBlock, GameObject otherBlock)
+    {
+        var fixedJoint = otherBlock.AddComponent<FixedJoint>(); // nb there will be one per magnet
+        var shadowRigidbody = shadowBlock.GetComponent<Rigidbody>();
+        fixedJoint.connectedBody = shadowRigidbody;
+        shadowRigidbody.useGravity = true;
+        shadowBlock.GetComponent<Collider>().enabled = true;
+    }
+
     void OnTriggerEnter(Collider collider)
     {
         Debug.Log("Entered trigger");
         if (gameObject.GetInstanceID() > collider.gameObject.GetInstanceID()) {
-            Debug.Log("I am the greatest");
+            Debug.Log("I am the greatest: " + thisBlock.name);
             var signedAngle = Vector3.SignedAngle(transform.forward, collider.transform.forward, Vector3.up);
             Debug.Log("Signed angle: " + signedAngle);
             if (Math.Abs(signedAngle) > 165f) {
-                oppositeMagnetTransform = collider.gameObject.transform;
-                transform.parent.gameObject.GetComponent<Renderer>().enabled = false;
-                shadowBlock.GetComponent<Renderer>().enabled = true;
-                SetMaterial(snappingMaterial);
+                var oppositeMagnetTransform = collider.gameObject.transform;
+
+                // this essentially sets state to attracting
+                // this.oppositeMagnetTransform = oppositeMagnetTransform;
+
+                // make shadow block visible instead of this block
+                // thisBlock.GetComponent<Renderer>().enabled = false;
+                // shadowBlock.GetComponent<Renderer>().enabled = true;
+
+                MoveMagnetAlignmentHandleToFaceMagnet(oppositeMagnetTransform);
+                var otherBlock = oppositeMagnetTransform.parent.gameObject;
+                LinkShadowBlockToOtherBlock(shadowBlock, otherBlock);
+
+                // debug
+                // SetMaterial(snappingMaterial);
             }
         }
     }
@@ -76,14 +88,26 @@ public class MagneticSnapper : MonoBehaviour
     void OnTriggerExit(Collider collider)
     {
         Debug.Log("Exited trigger");
-        if (gameObject.GetInstanceID() > collider.gameObject.GetInstanceID()) 
-        {
-            Debug.Log("I am still the greatest, but am leaving now...");
-            oppositeMagnetTransform = null; // NB could theoretically get multiple collisions... but not if blocks and magnets physically prevent it
-            transform.parent.gameObject.GetComponent<Renderer>().enabled = true;
-            shadowBlock.GetComponent<Renderer>().enabled = false;
-            SetMaterial(defaultMaterial);
-        }
+
+        // disabled as just doing one-shot
+        // if (gameObject.GetInstanceID() > collider.gameObject.GetInstanceID()) 
+        // {
+        //     Debug.Log("I am still the greatest, but am leaving now...");
+        //     oppositeMagnetTransform = null; // NB could theoretically get multiple collisions... but not if blocks and magnets physically prevent it
+        //     transform.parent.gameObject.GetComponent<Renderer>().enabled = true;
+        //     shadowBlock.GetComponent<Renderer>().enabled = false;
+        //     SetMaterial(defaultMaterial);
+        // }
+    }
+
+    void OnGrab()
+    {
+        Debug.Log("Grabbed: " + thisBlock.name);
+    }
+
+    void OnRelease()
+    {
+        Debug.Log("Released: " + thisBlock.name);
     }
 
     private void SetMaterial(Material material)
