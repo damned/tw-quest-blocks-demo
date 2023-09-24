@@ -19,6 +19,7 @@ public class MagneticSnapper : MonoBehaviour
     private Collider otherMagnetCollider = null;
     private GameObject otherMagnet = null;
     private Transform otherMagnetTransform = null;
+    private FixedJoint fixedJoint = null;
 
     void Start()
     {
@@ -125,33 +126,38 @@ public class MagneticSnapper : MonoBehaviour
         //
         // NB needs re-enabling later
         //
-        thisBlock.GetComponent<XRGrabInteractable>().enabled = false;
+        var grabber = thisBlock.GetComponent<XRGrabInteractable>();
+        grabber.enabled = false;
+        grabber.enabled = true;
         SnapThisBlockToOther(thisBlock, otherMagnetTransform);
 
         var otherBlock = otherMagnetTransform.parent.gameObject;
 
         // disable magnet colliders so don't keep on rehashing all this
         thisMagnetCollider.enabled = false;
-        otherMagnet.GetComponent<Collider>().enabled = false;
+        otherMagnetCollider.enabled = false;
 
-        LinkThisBlockToOtherBlock(thisBlock, otherBlock);
+        LatchThisBlockToOtherBlock(thisBlock, otherBlock);
     }
 
     // here for reference
-    void UnlinkBlocks(GameObject thisBlock, GameObject otherBlock)
+    void UnlatchOtherBlock(GameObject otherBlock)
     {
-        var shadowRigidbody = shadowBlock.GetComponent<Rigidbody>();
-        shadowRigidbody.useGravity = false;
-        shadowBlock.GetComponent<Collider>().enabled = false;
-        var thisFixedJoint = thisBlock.GetComponent<FixedJoint>(); // nb there will be one per magnet
-        Destroy(thisFixedJoint);
+        Debug.Log("Unlatching...");
+        if (fixedJoint == null)
+        {
+            Debug.Log("Cannot unlatch - no fixed joint to unlatch");
+            return;
+        }
+        // nb there will be one per magnet
+        Destroy(fixedJoint);
     }
 
-    void LinkThisBlockToOtherBlock(GameObject thisBlock, GameObject otherBlock)
+    void LatchThisBlockToOtherBlock(GameObject thisBlock, GameObject otherBlock)
     {
-        var fixedJoint = otherBlock.AddComponent<FixedJoint>(); // nb there will be one per magnet
-        var thisRigidbody = thisBlock.GetComponent<Rigidbody>();
-        fixedJoint.connectedBody = thisRigidbody;
+        fixedJoint = thisBlock.AddComponent<FixedJoint>(); // nb there will be one per magnet
+        var otherRigidbody = otherBlock.GetComponent<Rigidbody>();
+        fixedJoint.connectedBody = otherRigidbody;
     }
 
     void SnapThisBlockToOther(GameObject thisBlock, Transform otherMagnetTransform)
