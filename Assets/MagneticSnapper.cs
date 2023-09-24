@@ -57,16 +57,33 @@ public class MagneticSnapper : MonoBehaviour
                 otherMagnet = collider.gameObject;
 
                 Debug.Log("setting otherMagnetTransform due to alignment in trigger enter");
+                Debug.Log("otherMagnet: " + otherMagnet);
                 otherMagnetTransform = otherMagnet.transform;
 
-                // make shadow block visible instead of this block
-                ShowRealBlock(false);
-                ShowShadowBlock(true);
+                if (IsHandsFreeSnap(otherMagnet)) {
+                    Debug.Log("hands free attraction -> immediate latch");
+                    ShowRealBlock(true);
+                    ShowShadowBlock(false);
+                    LatchToOtherBlock();
+                    Debug.Log("Latched");
+                }
+                else
+                {
+                    // start snapping = make shadow block visible instead of this block
+                    ShowRealBlock(false);
+                    ShowShadowBlock(true);
 
-                MoveShadowMagnetAlignmentHandleToFaceMagnet(otherMagnetTransform);
+                    MoveShadowMagnetAlignmentHandleToFaceMagnet(otherMagnetTransform);
+                }
             }
         }
     }
+
+    private bool IsHandsFreeSnap(GameObject otherMagnet)
+    {
+        return !(IsGrabbed() && MagnetScriptOf(otherMagnet).IsGrabbed());
+    }
+
 
     void OnTriggerExit(Collider collider)
     {
@@ -137,6 +154,12 @@ public class MagneticSnapper : MonoBehaviour
         return isGrabbed;
     }
 
+
+    MagneticSnapper MagnetScriptOf(GameObject otherMagnet)
+    {
+        return otherMagnet.GetComponent<MagneticSnapper>();
+    }
+
     void OnRelease()
     {
         Debug.Log("Released: " + thisBlock.name);
@@ -150,7 +173,7 @@ public class MagneticSnapper : MonoBehaviour
             Debug.Log("I do have a reference to other magnet: attempt latch and hide shadow block");
             ShowRealBlock(true);
             ShowShadowBlock(false);
-
+            ReleaseGrabOnThisBlock();
             LatchToOtherBlock();
         }
     }
@@ -165,15 +188,16 @@ public class MagneticSnapper : MonoBehaviour
         meshRenderer.enabled = showBlock;
     }
 
-    private void LatchToOtherBlock()
+    private void ReleaseGrabOnThisBlock()
     {
-        // release the grab on this block
-        //
-        // NB needs re-enabling later
-        //
         var grabber = thisBlock.GetComponent<XRGrabInteractable>();
         grabber.enabled = false;
         grabber.enabled = true;
+    }
+
+    private void LatchToOtherBlock()
+    {
+        Debug.Log("Latching to other block, otherMagnetTransform: " + otherMagnetTransform.gameObject.name);
         SnapThisBlockToOther(thisBlock, otherMagnetTransform);
 
         var otherBlock = otherMagnetTransform.parent.gameObject;
@@ -187,7 +211,7 @@ public class MagneticSnapper : MonoBehaviour
         // save information for unlatching purposes
         // - otherMagnetCollider retained to be re-enabled after unlatching
         // - otherMagnetScript retained for querying/updating other magnet
-        otherMagnetScript = otherMagnet.GetComponent<MagneticSnapper>();
+        otherMagnetScript = MagnetScriptOf(otherMagnet);
         otherMagnetScript.SetLatchBackReference(this);
 
         Debug.Log("clearing otherMagnetTransform after latch: " + thisBlock.name);

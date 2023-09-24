@@ -28,11 +28,12 @@ todo
     - [x] unlatch if greater latched block grabbed and separated
     - [x] unlatch if greater last of both grabs
     - [x] unlatch if lesser last of both grabs
-[ ] allow grab-free latch
-[ ] allow one-handed latch
-[ ] allow lesser release/latch
+[x] allow grab-free latch
+[x] allow one-handed latch
+[x] allow lesser release/latch - supsiciously came for free - i think because becomes one-handed other way
 [ ] rumble when snapped and grabbing both
 [ ] multiple magnets per block
+  - might need to choose the greater block more carefully
 [ ] move to prefabs - perhaps with disabled collider
   - [ ] dynamically parent shadow block
 [ ] make shadow grey colour only in debug mode
@@ -46,6 +47,7 @@ todo
 [ ] add MagneticBlock script to parent that tracks the magnets and their attachments (links? latches?)
 [ ] re-visit who is the greater: most blocks attached, tightest grip, moving less, was already fixed, least recently grabbed?
 
+--
 
 so Snappable or MagneticBlock has refs to magnets (static), but dynamically attractions and latches, 
 snaps being the superset
