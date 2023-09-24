@@ -20,6 +20,10 @@ public class MagneticSnapper : MonoBehaviour
     private GameObject otherMagnet = null;
     private Transform otherMagnetTransform = null; // NB null if free or latched
     private FixedJoint fixedJoint = null;
+    private MagneticSnapper otherMagnetScript = null;
+    private MagneticSnapper latchBackReference = null;
+    private bool isGrabbed;
+
 
     void Start()
     {
@@ -51,6 +55,8 @@ public class MagneticSnapper : MonoBehaviour
             {
                 otherMagnetCollider = collider;
                 otherMagnet = collider.gameObject;
+
+                Debug.Log("setting otherMagnetTransform due to alignment in trigger enter");
                 otherMagnetTransform = otherMagnet.transform;
 
                 // make shadow block visible instead of this block
@@ -79,6 +85,7 @@ public class MagneticSnapper : MonoBehaviour
             {
                 Debug.Log("Oh, i don't have a reference to other magnet");
             }
+            Debug.Log("clearing otherMagnetTransform after exiting trigger");
             otherMagnetTransform = null; // NB could theoretically get multiple collisions... but not if blocks and magnets physically prevent it
             otherMagnet = null;
             otherMagnetCollider = null;
@@ -88,19 +95,44 @@ public class MagneticSnapper : MonoBehaviour
     void OnGrab()
     {
         Debug.Log("Grabbed: " + thisBlock.name);
+        isGrabbed = true;
         if (fixedJoint != null)
         {
             Debug.Log("grabbed and there's already a latch from this block");
-            UnlatchOtherBlock();
+            if (otherMagnetScript == null)
+            {
+                Debug.LogWarning("Latched weirdness - no stored reference to otherMagnetScript");
+                return;
+            }
+            if (!otherMagnetScript.HasLatchBackReference())
+            {
+                Debug.LogWarning("Latched weirdness - stored other magnet but has no back reference");
+                return;
+            }
+            if (otherMagnetScript.IsGrabbed())
+            {
+                Debug.Log("Unlatching as other block is also currently grabbed");
+                UnlatchOtherBlock();
+            }
+            else
+            {
+                Debug.Log("Not unlatching as other block not currently grabbed");
+            }
         }
+    }
+
+    bool IsGrabbed()
+    {
+        return isGrabbed;
     }
 
     void OnRelease()
     {
         Debug.Log("Released: " + thisBlock.name);
+        isGrabbed = false;
         if (otherMagnetTransform == null)
         {
-            Debug.Log("Oh, i don't have a reference to other magnet");
+            Debug.Log("Oh, i don't have a reference to other magnet - either free or latched");
         }
         else
         {
@@ -108,7 +140,7 @@ public class MagneticSnapper : MonoBehaviour
             ShowRealBlock(true);
             ShowShadowBlock(false);
 
-            LatchToBlock(otherMagnet, otherMagnetTransform);
+            LatchToOtherBlock();
         }
     }
 
@@ -122,7 +154,7 @@ public class MagneticSnapper : MonoBehaviour
         meshRenderer.enabled = showBlock;
     }
 
-    private void LatchToBlock(GameObject otherMagnet, Transform otherMagnetTransform)
+    private void LatchToOtherBlock()
     {
         // release the grab on this block
         //
@@ -141,12 +173,30 @@ public class MagneticSnapper : MonoBehaviour
 
         LatchThisBlockToOtherBlock(thisBlock, otherBlock);
 
+        // save information for unlatching purposes
+        // - otherMagnetCollider retained to be re-enabled after unlatching
+        // - otherMagnetScript retained for querying/updating other magnet
+        otherMagnetScript = otherMagnet.GetComponent<MagneticSnapper>();
+        otherMagnetScript.SetLatchBackReference(this);
+
+        Debug.Log("clearing otherMagnetTransform after latch: " + thisBlock.name);
         otherMagnetTransform = null; // NB could theoretically get multiple collisions... but not if blocks and magnets physically prevent it
         otherMagnet = null;
-        // otherMagnetCollider retained for re-enablement if unlatched
+        Debug.Log("cleared, otherMagnetTransform = " + otherMagnetTransform);
+    }
+
+    void SetLatchBackReference(MagneticSnapper greaterMagnetScript)
+    {
+        latchBackReference = greaterMagnetScript;
+    }
+
+    bool HasLatchBackReference()
+    {
+        return latchBackReference != null;
     }
 
     // here for reference
+
     void UnlatchOtherBlock()
     {
         Debug.Log("Unlatching...");

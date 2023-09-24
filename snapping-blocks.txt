@@ -26,15 +26,15 @@ todo
 [ ] allow retry / recycle:
   - [ ] unlatch - grab both blocks moves back to snapping
     - [x] unlatch if greater latched block grabbed and separated
-    - [ ] unlatch if greater last of both grabs
+    - [x] unlatch if greater last of both grabs
     - [ ] unlatch if lesser last of both grabs
-  - [ ] dynamic de-parent / re-parent shadow block
 [ ] allow grab-free latch
 [ ] allow one-handed latch
 [ ] allow lesser release/latch
 [ ] rumble when snapped and grabbing both
 [ ] multiple magnets per block
 [ ] move to prefabs - perhaps with disabled collider
+  - [ ] dynamically parent shadow block
 [ ] test with loads of blocks
 [ ] break block off - fixed joint break force?
 [ ] break block off - twist off?
