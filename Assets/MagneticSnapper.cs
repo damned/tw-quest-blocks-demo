@@ -7,28 +7,39 @@ public class MagneticSnapper : MonoBehaviour
 {
     public Material snappingMaterial;
     public GameObject shadowBlock;
+    private GameObject thisBlock;
     private Material defaultMaterial;
     private Renderer meshRenderer;
     private GameObject shadowBlockMagnetAlignmentHandle;
     private Transform oppositeMagnetTransform = null;
 
 
-    // Start is called before the first frame update
     void Start()
     {
-        meshRenderer = transform.parent.gameObject.GetComponent<Renderer>();
+        thisBlock = transform.parent.gameObject;
+        meshRenderer = thisBlock.GetComponent<Renderer>();
         defaultMaterial = meshRenderer.material;
         shadowBlockMagnetAlignmentHandle = shadowBlock.transform.parent.gameObject;
         Debug.Log("Default material: " + defaultMaterial);
+
+        LinkBlocksTogether(thisBlock, shadowBlock);
     }
 
-    // Update is called once per frame
     void Update()
     {
         if (oppositeMagnetTransform != null)
         {
             MoveMagnetAlignmentHandleToFaceMagnet(oppositeMagnetTransform);
         }
+    }
+
+    void LinkBlocksTogether(GameObject thisBlock, GameObject otherBlock)
+    {
+        var thisFixedJoint = thisBlock.GetComponent<FixedJoint>();
+        var shadowRigidbody = shadowBlock.GetComponent<Rigidbody>();
+        thisFixedJoint.connectedBody = shadowRigidbody;
+        shadowRigidbody.useGravity = true;
+        shadowBlock.GetComponent<Collider>().enabled = true;
     }
 
     void OnTriggerEnter(Collider collider)
