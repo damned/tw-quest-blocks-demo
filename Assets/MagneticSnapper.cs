@@ -13,7 +13,8 @@ public class MagneticSnapper : MonoBehaviour
     private Material defaultMaterial;
     private Renderer meshRenderer;
     private GameObject shadowBlockMagnetAlignmentHandle;
-    private Transform oppositeMagnetTransform = null;
+    private Transform otherMagnetTransform = null;
+    private Collider thisMagnetCollider;
 
 
     void Start()
@@ -21,15 +22,16 @@ public class MagneticSnapper : MonoBehaviour
         thisBlock = transform.parent.gameObject;
         meshRenderer = thisBlock.GetComponent<Renderer>();
         defaultMaterial = meshRenderer.material;
+        thisMagnetCollider = GetComponent<Collider>();
         shadowBlockMagnetAlignmentHandle = shadowBlock.transform.parent.gameObject;
         Debug.Log("Default material: " + defaultMaterial);
     }
 
     void Update()
     {
-        if (oppositeMagnetTransform != null)
+        if (otherMagnetTransform != null)
         {
-            MoveMagnetAlignmentHandleToFaceMagnet(oppositeMagnetTransform);
+            MoveMagnetAlignmentHandleToFaceMagnet(otherMagnetTransform);
         }
     }
 
@@ -60,6 +62,13 @@ public class MagneticSnapper : MonoBehaviour
         shadowBlock.GetComponent<Collider>().enabled = true;
     }
 
+    void LinkThisBlockToOtherBlock(GameObject thisBlock, GameObject otherBlock)
+    {
+        var fixedJoint = otherBlock.AddComponent<FixedJoint>(); // nb there will be one per magnet
+        var thisRigidbody = thisBlock.GetComponent<Rigidbody>();
+        fixedJoint.connectedBody = thisRigidbody;
+    }
+
     void OnTriggerEnter(Collider collider)
     {
         Debug.Log("Entered trigger");
@@ -68,7 +77,8 @@ public class MagneticSnapper : MonoBehaviour
             var signedAngle = Vector3.SignedAngle(transform.forward, collider.transform.forward, Vector3.up);
             Debug.Log("Signed angle: " + signedAngle);
             if (Math.Abs(signedAngle) > 165f) {
-                var oppositeMagnetTransform = collider.gameObject.transform;
+                var otherMagnet = collider.gameObject;
+                var otherMagnetTransform = otherMagnet.transform;
 
                 // this essentially sets state to attracting
                 // this.oppositeMagnetTransform = oppositeMagnetTransform;
@@ -82,16 +92,28 @@ public class MagneticSnapper : MonoBehaviour
 
                 // drop this block
                 thisBlock.GetComponent<XRGrabInteractable>().enabled = false;
+                SnapThisBlockToOther(thisBlock, otherMagnetTransform);
 
+                var otherBlock = otherMagnetTransform.parent.gameObject;
 
-                MoveMagnetAlignmentHandleToFaceMagnet(oppositeMagnetTransform);
-                var otherBlock = oppositeMagnetTransform.parent.gameObject;
-                LinkShadowBlockToOtherBlock(shadowBlock, otherBlock);
+                // disable magnet colliders so don't keep on rehashing all this
+                thisMagnetCollider.enabled = false;
+                otherMagnet.GetComponent<Collider>().enabled = false;
+
+                LinkThisBlockToOtherBlock(thisBlock, otherBlock);
+                shadowBlock.SetActive(false);
 
                 // debug
                 // SetMaterial(snappingMaterial);
             }
         }
+    }
+
+    void SnapThisBlockToOther(GameObject thisBlock, Transform otherMagnetTransform)
+    {
+        MoveMagnetAlignmentHandleToFaceMagnet(otherMagnetTransform);
+        thisBlock.transform.position = shadowBlock.transform.position;
+        thisBlock.transform.rotation = shadowBlock.transform.rotation;
     }
 
     void OnTriggerExit(Collider collider)
