@@ -1,6 +1,5 @@
-using System.Collections;
-using System.Collections.Generic;
 using System;
+using System.Linq;
 
 using UnityEngine;
 using UnityEngine.XR.Interaction.Toolkit;
@@ -9,6 +8,8 @@ public class MagneticSnapper : MonoBehaviour
 {
     public Material snappingMaterial;
     public GameObject shadowBlock;
+    public bool debugMode = false;
+
     private GameObject thisBlock;
     private Collider thisMagnetCollider;
     private Material defaultMaterial;
@@ -29,8 +30,16 @@ public class MagneticSnapper : MonoBehaviour
         defaultMaterial = meshRenderer.material;
         thisMagnetCollider = GetComponent<Collider>();
         shadowBlockMagnetAlignmentHandle = shadowBlock.transform.parent.gameObject;
+        InitDebugMode();
         Debug.Log("Default material: " + defaultMaterial);
     }
+
+    private void InitDebugMode()
+    {
+        shadowBlockMagnetAlignmentHandle.GetComponentsInChildren<MeshRenderer>()
+            .ToList().ForEach(r => r.enabled = debugMode);
+    }
+
 
     void Update()
     {
@@ -71,15 +80,25 @@ public class MagneticSnapper : MonoBehaviour
                 otherMagnetTransform = otherMagnet.transform;
 
                 // make shadow block visible instead of this block
-                meshRenderer.enabled = false;
-                shadowBlock.GetComponent<Renderer>().enabled = true;
+                ShowRealBlock(false);
+                ShowShadowBlock(true);
 
                 MoveShadowMagnetAlignmentHandleToFaceMagnet(otherMagnetTransform);
             }
         }
     }
 
-    private void LatchToBlockRemovingShadow(GameObject otherMagnet, Transform otherMagnetTransform)
+    private void ShowShadowBlock(bool showBlock)
+    {
+        shadowBlock.GetComponent<Renderer>().enabled = showBlock;
+    }
+
+    private void ShowRealBlock(bool showBlock)
+    {
+        meshRenderer.enabled = showBlock;
+    }
+
+    private void LatchToBlock(GameObject otherMagnet, Transform otherMagnetTransform)
     {
         // release the grab on this block
         //
@@ -95,7 +114,6 @@ public class MagneticSnapper : MonoBehaviour
         otherMagnet.GetComponent<Collider>().enabled = false;
 
         LinkThisBlockToOtherBlock(thisBlock, otherBlock);
-        shadowBlock.SetActive(false);
     }
 
 
@@ -118,9 +136,9 @@ public class MagneticSnapper : MonoBehaviour
                 Debug.Log("Oh, i don't have a reference to other magnet");
             }
             else {
-                Debug.Log("I do have a reference to other magnet");
-                meshRenderer.enabled = true;
-                LatchToBlockRemovingShadow(otherMagnet, otherMagnetTransform);
+                Debug.Log("I do have a reference to other magnet: hide shadow, show real block");
+                ShowRealBlock(true);
+                ShowShadowBlock(false);
                 otherMagnetTransform = null; // NB could theoretically get multiple collisions... but not if blocks and magnets physically prevent it
                 otherMagnetCollider = null;
                 otherMagnet = null;
@@ -136,6 +154,22 @@ public class MagneticSnapper : MonoBehaviour
     void OnRelease()
     {
         Debug.Log("Released: " + thisBlock.name);
+        if (otherMagnetTransform == null)
+        {
+            Debug.Log("Oh, i don't have a reference to other magnet");
+        }
+        else
+        {
+            Debug.Log("I do have a reference to other magnet: attempt latch and hide shadow block");
+            ShowRealBlock(true);
+            ShowShadowBlock(false);
+
+            LatchToBlock(otherMagnet, otherMagnetTransform);
+
+            otherMagnetTransform = null; // NB could theoretically get multiple collisions... but not if blocks and magnets physically prevent it
+            otherMagnetCollider = null;
+            otherMagnet = null;
+        }
     }
 
     private void MoveShadowMagnetAlignmentHandleToFaceMagnet(Transform magnetTransform)

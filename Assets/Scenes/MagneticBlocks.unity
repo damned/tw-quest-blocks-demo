@@ -422,6 +422,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   snappingMaterial: {fileID: 2100000, guid: 6efd0d4620286fc4896392e100e40ebe, type: 2}
   shadowBlock: {fileID: 0}
+  debugMode: 0
 --- !u!135 &475725745
 SphereCollider:
   m_ObjectHideFlags: 0
@@ -1109,6 +1110,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   snappingMaterial: {fileID: 2100000, guid: 6efd0d4620286fc4896392e100e40ebe, type: 2}
   shadowBlock: {fileID: 1663305798}
+  debugMode: 1
 --- !u!135 &1001857239
 SphereCollider:
   m_ObjectHideFlags: 0
@@ -1815,6 +1817,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   snappingMaterial: {fileID: 2100000, guid: 6efd0d4620286fc4896392e100e40ebe, type: 2}
   shadowBlock: {fileID: 0}
+  debugMode: 0
 --- !u!135 &1500768434
 SphereCollider:
   m_ObjectHideFlags: 0
@@ -1928,6 +1931,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   snappingMaterial: {fileID: 2100000, guid: 6efd0d4620286fc4896392e100e40ebe, type: 2}
   shadowBlock: {fileID: 740511531}
+  debugMode: 1
 --- !u!135 &1545912787
 SphereCollider:
   m_ObjectHideFlags: 0
