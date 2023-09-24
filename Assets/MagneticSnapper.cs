@@ -75,6 +75,8 @@ public class MagneticSnapper : MonoBehaviour
                 // thisBlock.GetComponent<Renderer>().enabled = false;
                 // shadowBlock.GetComponent<Renderer>().enabled = true;
 
+                thisBlock.SetActive(false);
+
                 MoveMagnetAlignmentHandleToFaceMagnet(oppositeMagnetTransform);
                 var otherBlock = oppositeMagnetTransform.parent.gameObject;
                 LinkShadowBlockToOtherBlock(shadowBlock, otherBlock);
