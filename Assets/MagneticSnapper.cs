@@ -21,7 +21,7 @@ public class MagneticSnapper : MonoBehaviour
     private Transform otherMagnetTransform = null; // NB null if free or latched
     private FixedJoint fixedJoint = null;
     private MagneticSnapper otherMagnetScript = null;
-    private MagneticSnapper latchBackReference = null;
+    private MagneticSnapper greaterMagnetBackReference = null;
     private bool isGrabbed;
 
 
@@ -98,13 +98,13 @@ public class MagneticSnapper : MonoBehaviour
         isGrabbed = true;
         if (fixedJoint != null)
         {
-            Debug.Log("grabbed and there's already a latch from this block");
+            Debug.Log("grabbed and there's already a latch from this block - i should be the greater: " + thisBlock.name);
             if (otherMagnetScript == null)
             {
                 Debug.LogWarning("Latched weirdness - no stored reference to otherMagnetScript");
                 return;
             }
-            if (!otherMagnetScript.HasLatchBackReference())
+            if (!otherMagnetScript.HasGreaterMagnetBackReference())
             {
                 Debug.LogWarning("Latched weirdness - stored other magnet but has no back reference");
                 return;
@@ -117,6 +117,17 @@ public class MagneticSnapper : MonoBehaviour
             else
             {
                 Debug.Log("Not unlatching as other block not currently grabbed");
+            }
+        }
+        else 
+        {
+            if (HasGreaterMagnetBackReference()) 
+            {
+                Debug.Log("Got a back reference to greater magnet - i should be the lesser: " + thisBlock.name);
+                if (greaterMagnetBackReference.IsGrabbed()) {
+                    Debug.Log("Unlatching via greater as other block is also currently grabbed");
+                    greaterMagnetBackReference.UnlatchOtherBlock();
+                }
             }
         }
     }
@@ -187,12 +198,12 @@ public class MagneticSnapper : MonoBehaviour
 
     void SetLatchBackReference(MagneticSnapper greaterMagnetScript)
     {
-        latchBackReference = greaterMagnetScript;
+        greaterMagnetBackReference = greaterMagnetScript;
     }
 
-    bool HasLatchBackReference()
+    bool HasGreaterMagnetBackReference()
     {
-        return latchBackReference != null;
+        return greaterMagnetBackReference != null;
     }
 
     // here for reference

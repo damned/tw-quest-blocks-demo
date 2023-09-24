@@ -23,11 +23,11 @@ todo
    - [x] when grab release (XGI Select Exited event) when attracted
 [x] when not snapped and release occurs, remove / replace shadow block
 [x] re-enable xrgi on block - works just straight after
-[ ] allow retry / recycle:
-  - [ ] unlatch - grab both blocks moves back to snapping
+[x] allow retry / recycle:
+  - [x] unlatch - grab both blocks moves back to snapping
     - [x] unlatch if greater latched block grabbed and separated
     - [x] unlatch if greater last of both grabs
-    - [ ] unlatch if lesser last of both grabs
+    - [x] unlatch if lesser last of both grabs
 [ ] allow grab-free latch
 [ ] allow one-handed latch
 [ ] allow lesser release/latch
@@ -35,6 +35,7 @@ todo
 [ ] multiple magnets per block
 [ ] move to prefabs - perhaps with disabled collider
   - [ ] dynamically parent shadow block
+[ ] make shadow grey colour only in debug mode
 [ ] test with loads of blocks
 [ ] break block off - fixed joint break force?
 [ ] break block off - twist off?
