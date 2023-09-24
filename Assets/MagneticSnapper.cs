@@ -20,9 +20,6 @@ public class MagneticSnapper : MonoBehaviour
     private GameObject otherMagnet = null;
     private Transform otherMagnetTransform = null;
 
-
-
-
     void Start()
     {
         thisBlock = transform.parent.gameObject;
@@ -34,36 +31,12 @@ public class MagneticSnapper : MonoBehaviour
         Debug.Log("Default material: " + defaultMaterial);
     }
 
-    private void InitDebugMode()
-    {
-        shadowBlockMagnetAlignmentHandle.GetComponentsInChildren<MeshRenderer>()
-            .ToList().ForEach(r => r.enabled = debugMode);
-    }
-
-
     void Update()
     {
         if (otherMagnetTransform != null)
         {
             MoveShadowMagnetAlignmentHandleToFaceMagnet(otherMagnetTransform);
         }
-    }
-
-    // here for reference
-    void UnlinkBlocks(GameObject thisBlock, GameObject otherBlock)
-    {
-        var shadowRigidbody = shadowBlock.GetComponent<Rigidbody>();
-        shadowRigidbody.useGravity = false;
-        shadowBlock.GetComponent<Collider>().enabled = false;
-        var thisFixedJoint = thisBlock.GetComponent<FixedJoint>(); // nb there will be one per magnet
-        Destroy(thisFixedJoint);
-    }
-
-    void LinkThisBlockToOtherBlock(GameObject thisBlock, GameObject otherBlock)
-    {
-        var fixedJoint = otherBlock.AddComponent<FixedJoint>(); // nb there will be one per magnet
-        var thisRigidbody = thisBlock.GetComponent<Rigidbody>();
-        fixedJoint.connectedBody = thisRigidbody;
     }
 
     void OnTriggerEnter(Collider collider)
@@ -86,42 +59,6 @@ public class MagneticSnapper : MonoBehaviour
                 MoveShadowMagnetAlignmentHandleToFaceMagnet(otherMagnetTransform);
             }
         }
-    }
-
-    private void ShowShadowBlock(bool showBlock)
-    {
-        shadowBlock.GetComponent<Renderer>().enabled = showBlock;
-    }
-
-    private void ShowRealBlock(bool showBlock)
-    {
-        meshRenderer.enabled = showBlock;
-    }
-
-    private void LatchToBlock(GameObject otherMagnet, Transform otherMagnetTransform)
-    {
-        // release the grab on this block
-        //
-        // NB needs re-enabling later
-        //
-        thisBlock.GetComponent<XRGrabInteractable>().enabled = false;
-        SnapThisBlockToOther(thisBlock, otherMagnetTransform);
-
-        var otherBlock = otherMagnetTransform.parent.gameObject;
-
-        // disable magnet colliders so don't keep on rehashing all this
-        thisMagnetCollider.enabled = false;
-        otherMagnet.GetComponent<Collider>().enabled = false;
-
-        LinkThisBlockToOtherBlock(thisBlock, otherBlock);
-    }
-
-
-    void SnapThisBlockToOther(GameObject thisBlock, Transform otherMagnetTransform)
-    {
-        MoveShadowMagnetAlignmentHandleToFaceMagnet(otherMagnetTransform);
-        thisBlock.transform.position = shadowBlock.transform.position;
-        thisBlock.transform.rotation = shadowBlock.transform.rotation;
     }
 
     void OnTriggerExit(Collider collider)
@@ -172,6 +109,58 @@ public class MagneticSnapper : MonoBehaviour
         }
     }
 
+    private void ShowShadowBlock(bool showBlock)
+    {
+        shadowBlock.GetComponent<Renderer>().enabled = showBlock;
+    }
+
+    private void ShowRealBlock(bool showBlock)
+    {
+        meshRenderer.enabled = showBlock;
+    }
+
+    private void LatchToBlock(GameObject otherMagnet, Transform otherMagnetTransform)
+    {
+        // release the grab on this block
+        //
+        // NB needs re-enabling later
+        //
+        thisBlock.GetComponent<XRGrabInteractable>().enabled = false;
+        SnapThisBlockToOther(thisBlock, otherMagnetTransform);
+
+        var otherBlock = otherMagnetTransform.parent.gameObject;
+
+        // disable magnet colliders so don't keep on rehashing all this
+        thisMagnetCollider.enabled = false;
+        otherMagnet.GetComponent<Collider>().enabled = false;
+
+        LinkThisBlockToOtherBlock(thisBlock, otherBlock);
+    }
+
+    // here for reference
+    void UnlinkBlocks(GameObject thisBlock, GameObject otherBlock)
+    {
+        var shadowRigidbody = shadowBlock.GetComponent<Rigidbody>();
+        shadowRigidbody.useGravity = false;
+        shadowBlock.GetComponent<Collider>().enabled = false;
+        var thisFixedJoint = thisBlock.GetComponent<FixedJoint>(); // nb there will be one per magnet
+        Destroy(thisFixedJoint);
+    }
+
+    void LinkThisBlockToOtherBlock(GameObject thisBlock, GameObject otherBlock)
+    {
+        var fixedJoint = otherBlock.AddComponent<FixedJoint>(); // nb there will be one per magnet
+        var thisRigidbody = thisBlock.GetComponent<Rigidbody>();
+        fixedJoint.connectedBody = thisRigidbody;
+    }
+
+    void SnapThisBlockToOther(GameObject thisBlock, Transform otherMagnetTransform)
+    {
+        MoveShadowMagnetAlignmentHandleToFaceMagnet(otherMagnetTransform);
+        thisBlock.transform.position = shadowBlock.transform.position;
+        thisBlock.transform.rotation = shadowBlock.transform.rotation;
+    }
+
     private void MoveShadowMagnetAlignmentHandleToFaceMagnet(Transform magnetTransform)
     {
         shadowBlockMagnetAlignmentHandle.transform.position = magnetTransform.position;
@@ -182,5 +171,11 @@ public class MagneticSnapper : MonoBehaviour
     {
         transform.rotation = referenceTransform.rotation;
         transform.Rotate(0, 180f, 0);
+    }
+
+    private void InitDebugMode()
+    {
+        shadowBlockMagnetAlignmentHandle.GetComponentsInChildren<MeshRenderer>()
+            .ToList().ForEach(r => r.enabled = debugMode);
     }
 }
