@@ -1,7 +1,9 @@
 using System.Collections;
 using System.Collections.Generic;
 using System;
+
 using UnityEngine;
+using UnityEngine.XR.Interaction.Toolkit;
 
 public class MagneticSnapper : MonoBehaviour
 {
@@ -75,7 +77,12 @@ public class MagneticSnapper : MonoBehaviour
                 // thisBlock.GetComponent<Renderer>().enabled = false;
                 // shadowBlock.GetComponent<Renderer>().enabled = true;
 
-                thisBlock.SetActive(false);
+                // usurp this block
+                // thisBlock.SetActive(false);
+
+                // drop this block
+                thisBlock.GetComponent<XRGrabInteractable>().enabled = false;
+
 
                 MoveMagnetAlignmentHandleToFaceMagnet(oppositeMagnetTransform);
                 var otherBlock = oppositeMagnetTransform.parent.gameObject;
