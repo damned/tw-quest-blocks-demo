@@ -1,0 +1,59 @@
+snappable blocks
+
+todo
+----
+
+[x] retest on headset
+[x] rename brick -> block
+[x] create shadow block, identical shape but different colours, no collider (or disabled collider)
+[x] create MagnetAlignmentHandle empty object matching magnet position and rotation
+[x] parent shadow block with MagnetAlignmentHandle - now placing handle places block w.r.t. magnet
+[...] when snapping:
+ - [x] move handle to other Magnet position
+ - [x] rotate to match (inverse) - maybe Quaternion.FromToRotation
+[x] track state as snapping
+[x] clear state, remove snapping when triggers exit
+[ ] snap when snapping and release occurs
+ - [x] do static tests and research - FixedJoint vs reparenting
+   - need Rigidbody on each block, FixedJoint between them both, both colliders enabled, ensure rigidbody enabled
+ - [x] move static setup into script step by step
+ - [x] add (FixedJoint/parenting) to other
+   - [x] trial one shot on first collide - link shadow block to other block; disable this block
+   - [x] link actual block to other block and remove shadow
+   - [x] when grab release (XGI Select Exited event) when attracted
+[x] when not snapped and release occurs, remove / replace shadow block
+[x] re-enable xrgi on block - works just straight after
+[ ] allow retry / recycle:
+  - [ ] unlatch - grab both blocks and move apart
+  - [ ] dynamic de-parent / re-parent shadow block
+[ ] allow grab-free latch
+[ ] allow one-handed latch
+[ ] allow lesser release/latch
+[ ] rumble when snapped and grabbing both
+[ ] multiple magnets per block
+[ ] move to prefabs - perhaps with disabled collider
+[ ] test with loads of blocks
+[ ] break block off - fixed joint break force?
+[ ] break block off - twist off?
+[ ] when is snapping re-test for alignment and update in Update()
+[ ] rumble when attracting
+[ ] rumble when straining 
+[ ] MagneticSnapper -> Magnet ?
+[ ] add MagneticBlock script to parent that tracks the magnets and their attachments (links? latches?)
+[ ] re-visit who is the greater: most blocks attached, tightest grip, moving less, was already fixed, least recently grabbed?
+
+
+so Snappable or MagneticBlock has refs to magnets (static), but dynamically attractions and latches, 
+snaps being the superset
+
+ magnets-magnet
+
+ attractions                       magnet.state = free | attracting | straining | snapped | latched
+            \
+  snaps-snap-attraction            snap.state = attracting | snapped | latched
+            \
+             latch
+            /
+     latches
+
+ 
