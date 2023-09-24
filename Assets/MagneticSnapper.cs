@@ -18,7 +18,7 @@ public class MagneticSnapper : MonoBehaviour
 
     private Collider otherMagnetCollider = null;
     private GameObject otherMagnet = null;
-    private Transform otherMagnetTransform = null;
+    private Transform otherMagnetTransform = null; // NB null if free or latched
     private FixedJoint fixedJoint = null;
 
     void Start()
@@ -69,24 +69,30 @@ public class MagneticSnapper : MonoBehaviour
         if (gameObject.GetInstanceID() > collider.gameObject.GetInstanceID()) 
         {
             Debug.Log("I am still the greatest, but am leaving now...");
-            if (otherMagnetTransform == null)
+            if (otherMagnetTransform != null)
             {
-                Debug.Log("Oh, i don't have a reference to other magnet");
-            }
-            else {
                 Debug.Log("I do have a reference to other magnet: hide shadow, show real block");
                 ShowRealBlock(true);
                 ShowShadowBlock(false);
-                otherMagnetTransform = null; // NB could theoretically get multiple collisions... but not if blocks and magnets physically prevent it
-                otherMagnetCollider = null;
-                otherMagnet = null;
             }
+            else
+            {
+                Debug.Log("Oh, i don't have a reference to other magnet");
+            }
+            otherMagnetTransform = null; // NB could theoretically get multiple collisions... but not if blocks and magnets physically prevent it
+            otherMagnet = null;
+            otherMagnetCollider = null;
         }
     }
 
     void OnGrab()
     {
         Debug.Log("Grabbed: " + thisBlock.name);
+        if (fixedJoint != null)
+        {
+            Debug.Log("grabbed and there's already a latch from this block");
+            UnlatchOtherBlock();
+        }
     }
 
     void OnRelease()
@@ -103,10 +109,6 @@ public class MagneticSnapper : MonoBehaviour
             ShowShadowBlock(false);
 
             LatchToBlock(otherMagnet, otherMagnetTransform);
-
-            otherMagnetTransform = null; // NB could theoretically get multiple collisions... but not if blocks and magnets physically prevent it
-            otherMagnetCollider = null;
-            otherMagnet = null;
         }
     }
 
@@ -138,10 +140,14 @@ public class MagneticSnapper : MonoBehaviour
         otherMagnetCollider.enabled = false;
 
         LatchThisBlockToOtherBlock(thisBlock, otherBlock);
+
+        otherMagnetTransform = null; // NB could theoretically get multiple collisions... but not if blocks and magnets physically prevent it
+        otherMagnet = null;
+        // otherMagnetCollider retained for re-enablement if unlatched
     }
 
     // here for reference
-    void UnlatchOtherBlock(GameObject otherBlock)
+    void UnlatchOtherBlock()
     {
         Debug.Log("Unlatching...");
         if (fixedJoint == null)
@@ -149,8 +155,27 @@ public class MagneticSnapper : MonoBehaviour
             Debug.Log("Cannot unlatch - no fixed joint to unlatch");
             return;
         }
+
+        if (fixedJoint.connectedBody == null)
+        {
+            Debug.LogWarning("Unlatch weirdness - fixed joint has no connected body");
+        }
+
         // nb there will be one per magnet
         Destroy(fixedJoint);
+        fixedJoint = null;
+
+        if (otherMagnetCollider == null)
+        {
+            Debug.LogWarning("Unlatch weirdness - otherMagnetCollider not set");
+        }
+
+        // this should re-trigger snapping if magnet colliders overlap
+        thisMagnetCollider.enabled = true;
+        otherMagnetCollider.enabled = true;
+
+        otherMagnetCollider = null;
+        Debug.Log("Unlatched");
     }
 
     void LatchThisBlockToOtherBlock(GameObject thisBlock, GameObject otherBlock)

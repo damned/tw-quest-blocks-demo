@@ -13,7 +13,7 @@ todo
  - [x] rotate to match (inverse) - maybe Quaternion.FromToRotation
 [x] track state as snapping
 [x] clear state, remove snapping when triggers exit
-[ ] snap when snapping and release occurs
+[x] snap when snapping and release occurs
  - [x] do static tests and research - FixedJoint vs reparenting
    - need Rigidbody on each block, FixedJoint between them both, both colliders enabled, ensure rigidbody enabled
  - [x] move static setup into script step by step
@@ -24,7 +24,10 @@ todo
 [x] when not snapped and release occurs, remove / replace shadow block
 [x] re-enable xrgi on block - works just straight after
 [ ] allow retry / recycle:
-  - [ ] unlatch - grab both blocks and move apart
+  - [ ] unlatch - grab both blocks moves back to snapping
+    - [x] unlatch if greater latched block grabbed and separated
+    - [ ] unlatch if greater last of both grabs
+    - [ ] unlatch if lesser last of both grabs
   - [ ] dynamic de-parent / re-parent shadow block
 [ ] allow grab-free latch
 [ ] allow one-handed latch
