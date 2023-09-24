@@ -35,7 +35,7 @@ public class MagneticSnapper : MonoBehaviour
 
     void LinkBlocksTogether(GameObject thisBlock, GameObject otherBlock)
     {
-        var thisFixedJoint = thisBlock.GetComponent<FixedJoint>();
+        var thisFixedJoint = thisBlock.AddComponent<FixedJoint>();
         var shadowRigidbody = shadowBlock.GetComponent<Rigidbody>();
         thisFixedJoint.connectedBody = shadowRigidbody;
         shadowRigidbody.useGravity = true;

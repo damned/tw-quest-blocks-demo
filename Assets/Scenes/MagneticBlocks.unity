@@ -2400,7 +2400,6 @@ GameObject:
   - component: {fileID: 2112978186}
   - component: {fileID: 2112978185}
   - component: {fileID: 2112978184}
-  - component: {fileID: 2112978190}
   m_Layer: 0
   m_Name: Block1
   m_TagString: Untagged
@@ -2655,18 +2654,3 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: -144.941, z: 0}
---- !u!138 &2112978190
-FixedJoint:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2112978183}
-  m_ConnectedBody: {fileID: 0}
-  m_ConnectedArticulationBody: {fileID: 0}
-  m_BreakForce: Infinity
-  m_BreakTorque: Infinity
-  m_EnableCollision: 0
-  m_EnablePreprocessing: 1
-  m_MassScale: 1
-  m_ConnectedMassScale: 1
