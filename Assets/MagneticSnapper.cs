@@ -22,7 +22,8 @@ public class MagneticSnapper : MonoBehaviour
         shadowBlockMagnetAlignmentHandle = shadowBlock.transform.parent.gameObject;
         Debug.Log("Default material: " + defaultMaterial);
 
-        LinkBlocksTogether(thisBlock, shadowBlock);
+        LinkBlocks(thisBlock, shadowBlock);
+        InvokeRepeating("UnlinkExample", 5, 0);
     }
 
     void Update()
@@ -33,9 +34,23 @@ public class MagneticSnapper : MonoBehaviour
         }
     }
 
-    void LinkBlocksTogether(GameObject thisBlock, GameObject otherBlock)
+    void UnlinkExample()
     {
-        var thisFixedJoint = thisBlock.AddComponent<FixedJoint>();
+        UnlinkBlocks(thisBlock, shadowBlock);
+    }
+
+    void UnlinkBlocks(GameObject thisBlock, GameObject otherBlock)
+    {
+        var shadowRigidbody = shadowBlock.GetComponent<Rigidbody>();
+        shadowRigidbody.useGravity = false;
+        shadowBlock.GetComponent<Collider>().enabled = false;
+        var thisFixedJoint = thisBlock.GetComponent<FixedJoint>(); // nb there will be one per magnet
+        Destroy(thisFixedJoint);
+    }
+
+    void LinkBlocks(GameObject thisBlock, GameObject otherBlock)
+    {
+        var thisFixedJoint = thisBlock.AddComponent<FixedJoint>(); // nb there will be one per magnet
         var shadowRigidbody = shadowBlock.GetComponent<Rigidbody>();
         thisFixedJoint.connectedBody = shadowRigidbody;
         shadowRigidbody.useGravity = true;
