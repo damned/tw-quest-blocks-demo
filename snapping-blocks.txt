@@ -31,21 +31,28 @@ todo
 [x] allow grab-free latch
 [x] allow one-handed latch
 [x] allow lesser release/latch - supsiciously came for free - i think because becomes one-handed other way
-[ ] rumble when snapped and grabbing both
+[ ] refactor to extract latch so that pipes have magnets
+  - [ ] get into same project - add as snapping scene
+  - [ ] copy pipes into snapping scene
+[ ] mode to remove physics when attached
 [ ] multiple magnets per block
   - might need to choose the greater block more carefully
 [ ] move to prefabs - perhaps with disabled collider
   - [ ] dynamically parent shadow block
 [ ] make shadow grey colour only in debug mode
 [ ] test with loads of blocks
-[ ] break block off - fixed joint break force?
-[ ] break block off - twist off?
 [ ] when is snapping re-test for alignment and update in Update()
+[ ] rumble when snapped and grabbing both
 [ ] rumble when attracting
 [ ] rumble when straining 
 [ ] MagneticSnapper -> Magnet ?
 [ ] add MagneticBlock script to parent that tracks the magnets and their attachments (links? latches?)
 [ ] re-visit who is the greater: most blocks attached, tightest grip, moving less, was already fixed, least recently grabbed?
+[ ] try break thresholds and smash up a compound
+
+-- deferred - not sure need
+[ ] break block off - fixed joint break force?
+[ ] break block off - twist off?
 
 --
 
