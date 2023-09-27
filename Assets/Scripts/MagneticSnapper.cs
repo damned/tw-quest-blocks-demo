@@ -7,9 +7,9 @@ using UnityEngine.XR.Interaction.Toolkit;
 [RequireComponent(typeof(MagnetAligner))]
 public class MagneticSnapper : MonoBehaviour
 {
-    public Material snappingMaterial;
     public GameObject shadowBlock;
     public GameObject shadowBlockMagnet;
+    public Material shadowMaterial;
     public bool debugMode = false;
 
     private GameObject thisBlock;
@@ -44,10 +44,32 @@ public class MagneticSnapper : MonoBehaviour
         {
             if (shadowBlockMagnet == null)
             {
-                Debug.Log("Dynamically rigging shadow block alignment handle for: " + thisBlock.name);
+                Debug.Log("Copying block to use as shadow block: " + thisBlock.name);
+                shadowBlock = Instantiate(thisBlock);
+                shadowBlock.name = thisBlock.name + " shadow";
+                Debug.Log("Created shadow block at: " + shadowBlock.transform.position);
 
+                var renderer = shadowBlock.GetComponent<MeshRenderer>();
+                renderer.material = shadowMaterial ?? meshRenderer.material;
+                renderer.enabled = debugMode;
+                shadowBlock.GetComponent<Collider>().enabled = false;
+                shadowBlock.GetComponent<Rigidbody>().useGravity = false;
+
+                var magnetComponents = shadowBlock.GetComponentsInChildren<MagneticSnapper>();
+                if (magnetComponents.Length > 1) {
+                    Debug.LogError("multiple magnets dynamic rigging not yet supported");
+                }
+
+                var magnetScript = magnetComponents[0];
+                magnetScript.enabled = false; // don't make this active or we'll continually start more and more shadow blocks!
+
+                shadowBlockMagnet = magnetScript.gameObject;
+                shadowBlockMagnet.GetComponent<Collider>().enabled = false;
             }
-            shadowBlock = shadowBlockMagnet.transform.parent.gameObject;
+            else
+            {
+                shadowBlock = shadowBlockMagnet.transform.parent.gameObject;
+            }
 
             Debug.Log("Dynamically rigging shadow block alignment handle for: " + thisBlock.name);
             shadowBlockMagnetAlignmentHandle = GetComponent<MagnetAligner>().CreateAlignmentHandle(shadowBlockMagnet);
