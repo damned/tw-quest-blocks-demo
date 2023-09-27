@@ -50,7 +50,10 @@ public class MagneticSnapper : MonoBehaviour
                 Debug.Log("Created shadow block at: " + shadowBlock.transform.position);
 
                 var renderer = shadowBlock.GetComponent<MeshRenderer>();
-                renderer.material = shadowMaterial ?? meshRenderer.material;
+                if (shadowMaterial != null)
+                {
+                    renderer.material = shadowMaterial;
+                }
                 renderer.enabled = debugMode;
                 shadowBlock.GetComponent<Collider>().enabled = false;
                 shadowBlock.GetComponent<Rigidbody>().useGravity = false;
