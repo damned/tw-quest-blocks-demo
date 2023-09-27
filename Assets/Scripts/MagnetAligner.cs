@@ -1,20 +1,7 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
-public class MagnetAligner : MonoBehaviour
+public class MagnetAligner
 {
-
-    void Start()
-    {
-
-    }
-
-    void Update()
-    {
-
-    }
-    
     public GameObject CreateAlignmentHandle(GameObject magnet)
     {
         var handle = new GameObject();

@@ -4,7 +4,7 @@ using System.Linq;
 using UnityEngine;
 using UnityEngine.XR.Interaction.Toolkit;
 
-[RequireComponent(typeof(MagnetAligner))]
+
 public class MagneticSnapper : MonoBehaviour
 {
     public GameObject shadowBlock;
@@ -26,6 +26,8 @@ public class MagneticSnapper : MonoBehaviour
     private MagneticSnapper greaterMagnetBackReference = null;
     private bool isGrabbed;
 
+    private ShadowCreator shadowCreator = new ShadowCreator();
+    private MagnetAligner magnetAligner = new MagnetAligner();
 
     void Start()
     {
@@ -44,38 +46,12 @@ public class MagneticSnapper : MonoBehaviour
         {
             if (shadowBlockMagnet == null)
             {
-                Debug.Log("Copying block to use as shadow block: " + thisBlock.name);
-                shadowBlock = Instantiate(thisBlock);
-                shadowBlock.name = thisBlock.name + " shadow";
-                Debug.Log("Created shadow block at: " + shadowBlock.transform.position);
-
-                var renderer = shadowBlock.GetComponent<MeshRenderer>();
-                if (shadowMaterial != null)
-                {
-                    renderer.material = shadowMaterial;
-                }
-                renderer.enabled = debugMode;
-                shadowBlock.GetComponent<Collider>().enabled = false;
-                shadowBlock.GetComponent<Rigidbody>().useGravity = false;
-
-                var magnetComponents = shadowBlock.GetComponentsInChildren<MagneticSnapper>();
-                if (magnetComponents.Length > 1) {
-                    Debug.LogError("multiple magnets dynamic rigging not yet supported");
-                }
-
-                var magnetScript = magnetComponents[0];
-                magnetScript.enabled = false; // don't make this active or we'll continually start more and more shadow blocks!
-
-                shadowBlockMagnet = magnetScript.gameObject;
-                shadowBlockMagnet.GetComponent<Collider>().enabled = false;
+                shadowBlockMagnet = shadowCreator.CreateShadowBlock(gameObject);
             }
-            else
-            {
-                shadowBlock = shadowBlockMagnet.transform.parent.gameObject;
-            }
+            shadowBlock = shadowBlockMagnet.transform.parent.gameObject;
 
             Debug.Log("Dynamically rigging shadow block alignment handle for: " + thisBlock.name);
-            shadowBlockMagnetAlignmentHandle = GetComponent<MagnetAligner>().CreateAlignmentHandle(shadowBlockMagnet);
+            shadowBlockMagnetAlignmentHandle = magnetAligner.CreateAlignmentHandle(shadowBlockMagnet);
         }
         InitDebugMode();
         Debug.Log("Default material: " + defaultMaterial);

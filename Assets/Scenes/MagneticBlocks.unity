@@ -415,7 +415,6 @@ GameObject:
   - component: {fileID: 206609256}
   - component: {fileID: 206609255}
   - component: {fileID: 206609253}
-  - component: {fileID: 206609254}
   m_Layer: 3
   m_Name: Magnet
   m_TagString: Untagged
@@ -439,18 +438,6 @@ MonoBehaviour:
   shadowBlockMagnet: {fileID: 0}
   shadowMaterial: {fileID: 2100000, guid: aea122488e3940443856467d6bc358ce, type: 2}
   debugMode: 0
---- !u!114 &206609254
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 206609252}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e84beed61be9fd04ca00cdae8bcbeeae, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!135 &206609255
 SphereCollider:
   m_ObjectHideFlags: 0
@@ -543,7 +530,6 @@ GameObject:
   - component: {fileID: 288575681}
   - component: {fileID: 288575680}
   - component: {fileID: 288575678}
-  - component: {fileID: 288575679}
   m_Layer: 3
   m_Name: Magnet
   m_TagString: Untagged
@@ -567,18 +553,6 @@ MonoBehaviour:
   shadowBlockMagnet: {fileID: 0}
   shadowMaterial: {fileID: 2100000, guid: aea122488e3940443856467d6bc358ce, type: 2}
   debugMode: 0
---- !u!114 &288575679
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 288575677}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e84beed61be9fd04ca00cdae8bcbeeae, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!135 &288575680
 SphereCollider:
   m_ObjectHideFlags: 0
@@ -1671,7 +1645,6 @@ GameObject:
   - component: {fileID: 456325465}
   - component: {fileID: 456325464}
   - component: {fileID: 456325463}
-  - component: {fileID: 456325467}
   m_Layer: 3
   m_Name: Magnetb
   m_TagString: Untagged
@@ -1774,18 +1747,6 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 456325461}
   m_Mesh: {fileID: 10207, guid: 0000000000000000e000000000000000, type: 0}
---- !u!114 &456325467
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 456325461}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e84beed61be9fd04ca00cdae8bcbeeae, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1 &540886915
 GameObject:
   m_ObjectHideFlags: 0
@@ -2161,7 +2122,6 @@ GameObject:
   - component: {fileID: 720262920}
   - component: {fileID: 720262919}
   - component: {fileID: 720262918}
-  - component: {fileID: 720262922}
   m_Layer: 3
   m_Name: Magnet
   m_TagString: Untagged
@@ -2264,18 +2224,6 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 720262916}
   m_Mesh: {fileID: 10207, guid: 0000000000000000e000000000000000, type: 0}
---- !u!114 &720262922
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 720262916}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e84beed61be9fd04ca00cdae8bcbeeae, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1 &824922968
 GameObject:
   m_ObjectHideFlags: 0
@@ -2289,7 +2237,6 @@ GameObject:
   - component: {fileID: 824922972}
   - component: {fileID: 824922971}
   - component: {fileID: 824922969}
-  - component: {fileID: 824922970}
   m_Layer: 3
   m_Name: Magnet
   m_TagString: Untagged
@@ -2313,18 +2260,6 @@ MonoBehaviour:
   shadowBlockMagnet: {fileID: 0}
   shadowMaterial: {fileID: 2100000, guid: aea122488e3940443856467d6bc358ce, type: 2}
   debugMode: 0
---- !u!114 &824922970
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 824922968}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e84beed61be9fd04ca00cdae8bcbeeae, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!135 &824922971
 SphereCollider:
   m_ObjectHideFlags: 0
@@ -3062,7 +2997,6 @@ GameObject:
   - component: {fileID: 884519054}
   - component: {fileID: 884519053}
   - component: {fileID: 884519052}
-  - component: {fileID: 884519057}
   m_Layer: 3
   m_Name: Magnet
   m_TagString: Untagged
@@ -3165,18 +3099,6 @@ Transform:
   m_Father: {fileID: 857000149}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &884519057
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 884519051}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e84beed61be9fd04ca00cdae8bcbeeae, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1 &949948533
 GameObject:
   m_ObjectHideFlags: 0
@@ -3273,7 +3195,6 @@ GameObject:
   - component: {fileID: 1001857240}
   - component: {fileID: 1001857239}
   - component: {fileID: 1001857238}
-  - component: {fileID: 1001857242}
   m_Layer: 3
   m_Name: Magnet
   m_TagString: Untagged
@@ -3376,18 +3297,6 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1001857236}
   m_Mesh: {fileID: 10207, guid: 0000000000000000e000000000000000, type: 0}
---- !u!114 &1001857242
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1001857236}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e84beed61be9fd04ca00cdae8bcbeeae, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1 &1077695714
 GameObject:
   m_ObjectHideFlags: 0
@@ -3838,7 +3747,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1157856900}
   m_LocalRotation: {x: -0.060572706, y: 0.692821, z: 0.076727025, w: 0.7144529}
-  m_LocalPosition: {x: -0.655, y: 1.646, z: 0.988}
+  m_LocalPosition: {x: -0.54, y: 1.108, z: 0.716}
   m_LocalScale: {x: 0.2, y: 0.2, z: 0.2}
   m_ConstrainProportionsScale: 1
   m_Children:
@@ -4621,15 +4530,15 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1266853901}
-  m_LocalRotation: {x: -0.060572706, y: 0.692821, z: 0.076727025, w: 0.7144529}
-  m_LocalPosition: {x: -0.682, y: 1.53, z: 0.2}
+  m_LocalRotation: {x: -0.47141534, y: 0.5132616, z: 0.4716466, w: 0.5402589}
+  m_LocalPosition: {x: -0.746, y: 0.924, z: 0.434}
   m_LocalScale: {x: 0.2, y: 0.6, z: 0.2}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 1545912785}
   m_Father: {fileID: 0}
   m_RootOrder: 5
-  m_LocalEulerAnglesHint: {x: -11.12, y: 88.093, z: 1.501}
+  m_LocalEulerAnglesHint: {x: -83.478, y: 75.384, z: 13.08}
 --- !u!1 &1272943288
 GameObject:
   m_ObjectHideFlags: 0
@@ -4726,7 +4635,6 @@ GameObject:
   - component: {fileID: 1312716837}
   - component: {fileID: 1312716836}
   - component: {fileID: 1312716834}
-  - component: {fileID: 1312716835}
   m_Layer: 3
   m_Name: Magnet
   m_TagString: Untagged
@@ -4750,18 +4658,6 @@ MonoBehaviour:
   shadowBlockMagnet: {fileID: 0}
   shadowMaterial: {fileID: 2100000, guid: aea122488e3940443856467d6bc358ce, type: 2}
   debugMode: 0
---- !u!114 &1312716835
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1312716833}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e84beed61be9fd04ca00cdae8bcbeeae, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!135 &1312716836
 SphereCollider:
   m_ObjectHideFlags: 0
@@ -5241,7 +5137,6 @@ GameObject:
   - component: {fileID: 1545912788}
   - component: {fileID: 1545912787}
   - component: {fileID: 1545912786}
-  - component: {fileID: 1545912790}
   m_Layer: 3
   m_Name: Magnet
   m_TagString: Untagged
@@ -5344,18 +5239,6 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1545912784}
   m_Mesh: {fileID: 10207, guid: 0000000000000000e000000000000000, type: 0}
---- !u!114 &1545912790
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1545912784}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e84beed61be9fd04ca00cdae8bcbeeae, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1 &1551976301
 GameObject:
   m_ObjectHideFlags: 0
@@ -5369,7 +5252,6 @@ GameObject:
   - component: {fileID: 1551976304}
   - component: {fileID: 1551976303}
   - component: {fileID: 1551976302}
-  - component: {fileID: 1551976307}
   m_Layer: 3
   m_Name: Magnet
   m_TagString: Untagged
@@ -5472,18 +5354,6 @@ Transform:
   m_Father: {fileID: 422082393}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &1551976307
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1551976301}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e84beed61be9fd04ca00cdae8bcbeeae, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1 &1600027308
 GameObject:
   m_ObjectHideFlags: 0
@@ -5497,7 +5367,6 @@ GameObject:
   - component: {fileID: 1600027312}
   - component: {fileID: 1600027311}
   - component: {fileID: 1600027310}
-  - component: {fileID: 1600027314}
   m_Layer: 3
   m_Name: Magnet
   m_TagString: Untagged
@@ -5600,18 +5469,6 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1600027308}
   m_Mesh: {fileID: 10207, guid: 0000000000000000e000000000000000, type: 0}
---- !u!114 &1600027314
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1600027308}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e84beed61be9fd04ca00cdae8bcbeeae, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1 &1607962681
 GameObject:
   m_ObjectHideFlags: 0
@@ -6366,7 +6223,6 @@ GameObject:
   - component: {fileID: 1674129108}
   - component: {fileID: 1674129107}
   - component: {fileID: 1674129106}
-  - component: {fileID: 1674129111}
   m_Layer: 3
   m_Name: Magnet
   m_TagString: Untagged
@@ -6469,18 +6325,6 @@ Transform:
   m_Father: {fileID: 1989067397}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &1674129111
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1674129105}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e84beed61be9fd04ca00cdae8bcbeeae, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1 &1715859632
 GameObject:
   m_ObjectHideFlags: 0
@@ -6826,7 +6670,6 @@ GameObject:
   - component: {fileID: 1869828826}
   - component: {fileID: 1869828825}
   - component: {fileID: 1869828824}
-  - component: {fileID: 1869828829}
   m_Layer: 3
   m_Name: Magnet
   m_TagString: Untagged
@@ -6929,18 +6772,6 @@ Transform:
   m_Father: {fileID: 1607962687}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &1869828829
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1869828823}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e84beed61be9fd04ca00cdae8bcbeeae, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1 &1933528966
 GameObject:
   m_ObjectHideFlags: 0
@@ -6954,7 +6785,6 @@ GameObject:
   - component: {fileID: 1933528970}
   - component: {fileID: 1933528969}
   - component: {fileID: 1933528968}
-  - component: {fileID: 1933528972}
   m_Layer: 3
   m_Name: Magnetb
   m_TagString: Untagged
@@ -7057,18 +6887,6 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1933528966}
   m_Mesh: {fileID: 10207, guid: 0000000000000000e000000000000000, type: 0}
---- !u!114 &1933528972
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1933528966}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e84beed61be9fd04ca00cdae8bcbeeae, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1 &1989067391
 GameObject:
   m_ObjectHideFlags: 0
@@ -7353,7 +7171,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1989067391}
   m_LocalRotation: {x: -0, y: -0.9535615, z: -0, w: 0.3011985}
-  m_LocalPosition: {x: -0.27047816, y: 1.4722273, z: 1.0289663}
+  m_LocalPosition: {x: -0.206, y: 1.207, z: 0.702}
   m_LocalScale: {x: 0.11000001, y: 0.11000001, z: 0.11000001}
   m_ConstrainProportionsScale: 1
   m_Children:
@@ -7374,7 +7192,6 @@ GameObject:
   - component: {fileID: 2062437896}
   - component: {fileID: 2062437895}
   - component: {fileID: 2062437894}
-  - component: {fileID: 2062437898}
   m_Layer: 3
   m_Name: Magnetb
   m_TagString: Untagged
@@ -7477,18 +7294,6 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2062437892}
   m_Mesh: {fileID: 10207, guid: 0000000000000000e000000000000000, type: 0}
---- !u!114 &2062437898
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2062437892}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e84beed61be9fd04ca00cdae8bcbeeae, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1 &2092288085
 GameObject:
   m_ObjectHideFlags: 0
@@ -7815,7 +7620,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2112978183}
   m_LocalRotation: {x: -0, y: -0.9535615, z: -0, w: 0.3011985}
-  m_LocalPosition: {x: -0.153, y: 1.793, z: 0.589}
+  m_LocalPosition: {x: 0, y: 0.994, z: 0.481}
   m_LocalScale: {x: 0.2, y: 0.2, z: 0.6}
   m_ConstrainProportionsScale: 0
   m_Children:
