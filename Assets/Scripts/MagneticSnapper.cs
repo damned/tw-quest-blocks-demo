@@ -60,11 +60,11 @@ public class MagneticSnapper : MonoBehaviour
                 Debug.Log("otherMagnet: " + otherMagnet);
                 otherMagnetTransform = otherMagnet.transform;
 
-                if (IsHandsFreeSnap(otherMagnet)) {
+                if (IsNotGrabbedByBothHands(otherMagnet)) {
                     Debug.Log("hands free attraction -> immediate latch");
                     ShowRealBlock(true);
                     ShowShadowBlock(false);
-                    LatchToOtherBlock();
+                    SnapAndLatchToOtherBlock();
                     Debug.Log("Latched");
                 }
                 else
@@ -79,7 +79,7 @@ public class MagneticSnapper : MonoBehaviour
         }
     }
 
-    private bool IsHandsFreeSnap(GameObject otherMagnet)
+    private bool IsNotGrabbedByBothHands(GameObject otherMagnet)
     {
         return !(IsGrabbed() && MagnetScriptOf(otherMagnet).IsGrabbed());
     }
@@ -174,7 +174,7 @@ public class MagneticSnapper : MonoBehaviour
             ShowRealBlock(true);
             ShowShadowBlock(false);
             ReleaseGrabOnThisBlock();
-            LatchToOtherBlock();
+            SnapAndLatchToOtherBlock();
         }
     }
 
@@ -195,7 +195,7 @@ public class MagneticSnapper : MonoBehaviour
         grabber.enabled = true;
     }
 
-    private void LatchToOtherBlock()
+    private void SnapAndLatchToOtherBlock()
     {
         Debug.Log("Latching to other block, otherMagnetTransform: " + otherMagnetTransform.gameObject.name);
         SnapThisBlockToOther(thisBlock, otherMagnetTransform);
