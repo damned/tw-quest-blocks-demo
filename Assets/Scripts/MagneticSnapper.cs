@@ -4,10 +4,12 @@ using System.Linq;
 using UnityEngine;
 using UnityEngine.XR.Interaction.Toolkit;
 
+[RequireComponent(typeof(MagnetAligner))]
 public class MagneticSnapper : MonoBehaviour
 {
     public Material snappingMaterial;
     public GameObject shadowBlock;
+    public GameObject shadowBlockMagnet;
     public bool debugMode = false;
 
     private GameObject thisBlock;
@@ -31,7 +33,17 @@ public class MagneticSnapper : MonoBehaviour
         meshRenderer = thisBlock.GetComponent<Renderer>();
         defaultMaterial = meshRenderer.material;
         thisMagnetCollider = GetComponent<Collider>();
-        shadowBlockMagnetAlignmentHandle = shadowBlock.transform.parent.gameObject;
+
+        if (shadowBlockMagnet != null)
+        {
+            Debug.Log("Dynamically rigging shadow block alignment handle for: " + thisBlock.name);
+            shadowBlockMagnetAlignmentHandle = GetComponent<MagnetAligner>().CreateAlignmentHandle(shadowBlockMagnet);
+        }
+        else
+        {
+            Debug.Log("Using manually rigged shadow block for: " + thisBlock.name);
+            shadowBlockMagnetAlignmentHandle = shadowBlock.transform.parent.gameObject;
+        }
         InitDebugMode();
         Debug.Log("Default material: " + defaultMaterial);
     }

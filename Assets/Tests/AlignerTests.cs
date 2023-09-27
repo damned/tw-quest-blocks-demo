@@ -18,7 +18,7 @@ public class AlignerTests
             var magnet = CreateOutwardFacingMagnetAtPositiveZOnNewBlockAtOriginUsingScale(1);
             var blockTransform = magnet.transform.parent;
 
-            var aligner = magnet.AddComponent<Aligner>();
+            var aligner = magnet.AddComponent<MagnetAligner>();
 
             var handle = aligner.CreateAlignmentHandle(magnet);
 
@@ -34,7 +34,7 @@ public class AlignerTests
             var magnet = CreateOutwardFacingMagnetAtDirectionOnNewBlockAtOriginUsingScale(new Vector3(1, 0, 0), 1);
             var blockTransform = magnet.transform.parent;
 
-            var aligner = magnet.AddComponent<Aligner>();
+            var aligner = magnet.AddComponent<MagnetAligner>();
             var handle = aligner.CreateAlignmentHandle(magnet);
 
             Assert.AreEqual(blockTransform.parent, handle.transform);
