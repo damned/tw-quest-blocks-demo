@@ -29,20 +29,28 @@ public class MagneticSnapper : MonoBehaviour
 
     void Start()
     {
+        Debug.Log("magnet instance id: " + gameObject.GetInstanceID());
         thisBlock = transform.parent.gameObject;
         meshRenderer = thisBlock.GetComponent<Renderer>();
         defaultMaterial = meshRenderer.material;
         thisMagnetCollider = GetComponent<Collider>();
 
-        if (shadowBlockMagnet != null)
-        {
-            Debug.Log("Dynamically rigging shadow block alignment handle for: " + thisBlock.name);
-            shadowBlockMagnetAlignmentHandle = GetComponent<MagnetAligner>().CreateAlignmentHandle(shadowBlockMagnet);
-        }
-        else
+        if (shadowBlock != null)
         {
             Debug.Log("Using manually rigged shadow block for: " + thisBlock.name);
             shadowBlockMagnetAlignmentHandle = shadowBlock.transform.parent.gameObject;
+        }
+        else
+        {
+            if (shadowBlockMagnet == null)
+            {
+                Debug.Log("Dynamically rigging shadow block alignment handle for: " + thisBlock.name);
+
+            }
+            shadowBlock = shadowBlockMagnet.transform.parent.gameObject;
+
+            Debug.Log("Dynamically rigging shadow block alignment handle for: " + thisBlock.name);
+            shadowBlockMagnetAlignmentHandle = GetComponent<MagnetAligner>().CreateAlignmentHandle(shadowBlockMagnet);
         }
         InitDebugMode();
         Debug.Log("Default material: " + defaultMaterial);
@@ -59,7 +67,7 @@ public class MagneticSnapper : MonoBehaviour
     void OnTriggerEnter(Collider collider)
     {
         Debug.Log("Entered trigger");
-        if (gameObject.GetInstanceID() > collider.gameObject.GetInstanceID()) {
+        if (gameObject.GetInstanceID() < collider.gameObject.GetInstanceID()) {
             Debug.Log("I am the greatest: " + thisBlock.name);
             var signedAngle = Vector3.SignedAngle(transform.forward, collider.transform.forward, Vector3.up);
             Debug.Log("Signed angle: " + signedAngle);
@@ -101,7 +109,7 @@ public class MagneticSnapper : MonoBehaviour
     {
         Debug.Log("Exited trigger");
 
-        if (gameObject.GetInstanceID() > collider.gameObject.GetInstanceID()) 
+        if (gameObject.GetInstanceID() < collider.gameObject.GetInstanceID()) 
         {
             Debug.Log("I am still the greatest, but am leaving now...");
             if (otherMagnetTransform != null)
