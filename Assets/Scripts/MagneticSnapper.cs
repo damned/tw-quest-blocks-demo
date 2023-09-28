@@ -24,7 +24,7 @@ public class MagneticSnapper : MonoBehaviour
     private FixedJoint fixedJoint = null;
     private MagneticSnapper otherMagnetScript = null;
     private MagneticSnapper greaterMagnetBackReference = null;
-    private bool isGrabbed;
+    private MagneticBlock magneticBlock;
 
     private ShadowCreator shadowCreator = new ShadowCreator();
     private MagnetAligner magnetAligner = new MagnetAligner();
@@ -33,6 +33,7 @@ public class MagneticSnapper : MonoBehaviour
     {
         Debug.Log("magnet instance id: " + gameObject.GetInstanceID());
         thisBlock = transform.parent.gameObject;
+        magneticBlock = thisBlock.GetComponent<MagneticBlock>();
         meshRenderer = thisBlock.GetComponent<Renderer>();
         defaultMaterial = meshRenderer.material;
         thisMagnetCollider = GetComponent<Collider>();
@@ -82,7 +83,7 @@ public class MagneticSnapper : MonoBehaviour
                 otherMagnetTransform = otherMagnet.transform;
 
                 if (IsNotGrabbedByBothHands(otherMagnet)) {
-                    Debug.Log("hands free attraction -> immediate latch");
+                    Debug.Log("hands free or singled hand attraction -> immediate latch");
                     ShowRealBlock(true);
                     ShowShadowBlock(false);
                     SnapAndLatchToOtherBlock();
@@ -133,7 +134,7 @@ public class MagneticSnapper : MonoBehaviour
     void OnGrab()
     {
         Debug.Log("Grabbed: " + thisBlock.name);
-        isGrabbed = true;
+        magneticBlock.OnGrab();
         if (fixedJoint != null)
         {
             Debug.Log("grabbed and there's already a latch from this block - i should be the greater: " + thisBlock.name);
@@ -172,7 +173,7 @@ public class MagneticSnapper : MonoBehaviour
 
     bool IsGrabbed()
     {
-        return isGrabbed;
+        return magneticBlock.IsGrabbed();
     }
 
 
@@ -184,7 +185,7 @@ public class MagneticSnapper : MonoBehaviour
     void OnRelease()
     {
         Debug.Log("Released: " + thisBlock.name);
-        isGrabbed = false;
+        magneticBlock.OnRelease();
         if (otherMagnetTransform == null)
         {
             Debug.Log("Oh, i don't have a reference to other magnet - either free or latched");

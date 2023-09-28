@@ -3,6 +3,9 @@ using UnityEngine;
 
 public class ShadowCreator
 {
+    private const float FLOAT_TOLERANCE = 0.001f;
+
+
     public GameObject CreateShadowBlock(GameObject magnet)
     {
         var block = magnet.transform.parent.gameObject;
@@ -26,17 +29,26 @@ public class ShadowCreator
         shadowBlock.GetComponent<Collider>().enabled = false;
         shadowBlock.GetComponent<Rigidbody>().useGravity = false;
 
-        var shadowMagnetScripts = shadowBlock.GetComponentsInChildren<MagneticSnapper>();
-        if (shadowMagnetScripts.Length > 1) {
-            Debug.LogError("multiple magnets dynamic rigging not yet supported");
+        MagneticSnapper shadowMagnetScript = null;
+        foreach (var anyShadowMagnetScript in shadowBlock.GetComponentsInChildren<MagneticSnapper>())
+        {
+            anyShadowMagnetScript.enabled = false; // disable scripts or we'll continually start more and more shadow blocks!
+            anyShadowMagnetScript.GetComponent<Collider>().enabled = false;
+            if (Vector3.Distance(magnet.transform.localPosition, anyShadowMagnetScript.transform.localPosition) < FLOAT_TOLERANCE)
+            {
+                if (shadowMagnetScript == null)
+                {
+                    Debug.Log("Cool found a magnet in shadow block that matches original magnet position");
+                    shadowMagnetScript = anyShadowMagnetScript;
+                }
+                else
+                {
+                    Debug.LogWarning("Found more than one magnet at same position - duplicate magnets in block?");
+                }
+            }
         }
 
-        var shadowMagnetScript = shadowMagnetScripts[0];
-        shadowMagnetScript.enabled = false; // don't make this active or we'll continually start more and more shadow blocks!
-
         var shadowMagnet = shadowMagnetScript.gameObject;
-        shadowMagnet.GetComponent<Collider>().enabled = false;
-
         return shadowMagnet;
     }
 }

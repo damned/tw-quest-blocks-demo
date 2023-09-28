@@ -6,6 +6,7 @@ public class MagnetAligner
     {
         var handle = new GameObject();
         var blockTransform = magnet.transform.parent;
+        handle.name = "HandleFor" + blockTransform.name;
         
         handle.transform.position = magnet.transform.position;
         handle.transform.rotation = magnet.transform.rotation;

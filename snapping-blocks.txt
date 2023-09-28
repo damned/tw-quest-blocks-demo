@@ -32,13 +32,14 @@ todo
 [x] allow one-handed latch
 [x] allow lesser release/latch - supsiciously came for free - i think because becomes one-handed other way
 [ ] refactor to extract latch so that pipes have magnets
+  - [ ] spike against blocks without Rigidbody
   - [ ] get into same project - add as snapping scene
   - [ ] copy pipes into snapping scene
 [ ] mode to remove physics when attached
-[ ] multiple magnets per block
+[x] multiple magnets per block
   - might need to choose the greater block more carefully
-[ ] move to prefabs - perhaps with disabled collider
-  - [ ] dynamically parent shadow block
+[x] move to prefabs/replication - perhaps with disabled collider
+  - [x] dynamically parent shadow block
 [ ] make shadow grey colour only in debug mode
 [ ] test with loads of blocks
 [ ] when is snapping re-test for alignment and update in Update()
