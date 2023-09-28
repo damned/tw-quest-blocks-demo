@@ -131,10 +131,9 @@ public class MagneticSnapper : MonoBehaviour
         }
     }
 
-    void OnGrab()
+    public void OnGrab()
     {
         Debug.Log("Grabbed: " + thisBlock.name);
-        magneticBlock.OnGrab();
         if (fixedJoint != null)
         {
             Debug.Log("grabbed and there's already a latch from this block - i should be the greater: " + thisBlock.name);
@@ -182,10 +181,9 @@ public class MagneticSnapper : MonoBehaviour
         return otherMagnet.GetComponent<MagneticSnapper>();
     }
 
-    void OnRelease()
+    public void OnRelease()
     {
         Debug.Log("Released: " + thisBlock.name);
-        magneticBlock.OnRelease();
         if (otherMagnetTransform == null)
         {
             Debug.Log("Oh, i don't have a reference to other magnet - either free or latched");
