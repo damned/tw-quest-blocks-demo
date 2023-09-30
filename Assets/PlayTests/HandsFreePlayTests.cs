@@ -6,7 +6,7 @@ using UnityEngine;
 using UnityEngine.TestTools;
 using UnityEngine.TestTools.Utils;
 
-public class NewTestScript
+public class HandsFreePlayTests
 {
     Vector3EqualityComparer closeEnoughVectorComparer = Vector3EqualityComparer.Instance;
     
