@@ -6,6 +6,7 @@ using UnityEngine;
 public class LatchEnd : MonoBehaviour
 {
     private Latch latch = null;
+    private bool isInitiator = false;
 
     // Start is called before the first frame update
     void Start()
@@ -30,6 +31,8 @@ public class LatchEnd : MonoBehaviour
 
     public void LatchTo(LatchEnd other)
     {
+        isInitiator = true;
+        other.isInitiator = false;
         latch = new PhysicsLatch();
         other.latch = latch;
     }
@@ -38,5 +41,10 @@ public class LatchEnd : MonoBehaviour
     {
         latch.Destroy();
         latch = null;
+    }
+
+    public bool IsInitiator()
+    {
+        return isInitiator;
     }
 }

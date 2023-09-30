@@ -31,10 +31,23 @@ todo
 [x] allow grab-free latch
 [x] allow one-handed latch
 [x] allow lesser release/latch - supsiciously came for free - i think because becomes one-handed other way
+[x] integration tests
+  - [x] hands-free
+  - [ ] single hand on release
+  - [ ] double-hand on release
 [ ] refactor to extract latch so that pipes have magnets
-  - [ ] spike against blocks without Rigidbody
+  - [x] spike against blocks without Rigidbody - xrgrabi doesn't work without rigidbody - these are just kinematic
+  - [ ] extract latch and latch ends
+  - [ ] apply vs kinematic
   - [ ] get into same project - add as snapping scene
   - [ ] copy pipes into snapping scene
+[ ] snap precedence:
+  - [ ] snap non-kinematic to kinematic
+  - [ ] snap single to compound
+[ ] unlatch behaviour tweaks:
+  - [ ] leaf block on non-leaf block unlatches with single hand
+  - [ ] non-leaf block moves compound
+[ ] isolate xrgi interaction and support other implementations
 [ ] mode to remove physics when attached
 [x] multiple magnets per block
   - might need to choose the greater block more carefully

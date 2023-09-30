@@ -100,7 +100,8 @@ public class Magnet : MonoBehaviour
     void OnTriggerEnter(Collider collider)
     {
         Debug.Log("Entered trigger");
-        if (gameObject.GetInstanceID() < collider.gameObject.GetInstanceID()) {
+        if (IsThisDecidingMagnet(gameObject, collider.gameObject))
+        {
             Debug.Log("I am the greatest: " + thisBlock.name);
             var signedAngle = Vector3.SignedAngle(transform.forward, collider.transform.forward, Vector3.up);
             Debug.Log("Signed angle: " + signedAngle);
@@ -113,7 +114,8 @@ public class Magnet : MonoBehaviour
                 Debug.Log("otherMagnet: " + otherMagnet);
                 otherMagnetTransform = otherMagnet.transform;
 
-                if (IsNotGrabbedByBothHands(otherMagnet)) {
+                if (IsNotGrabbedByBothHands(otherMagnet))
+                {
                     Debug.Log("hands free or singled hand attraction -> immediate latch");
                     ShowRealBlock(true);
                     ShowShadowBlock(false);
@@ -138,7 +140,7 @@ public class Magnet : MonoBehaviour
         var otherMagnetScript = MagnetScriptOf(otherMagnet);
 
         Debug.Log("other magnet script: " + otherMagnetScript);
-        return !(IsGrabbed() && otherMagnetScript.IsGrabbed());
+        return !(IsBlockGrabbed() && otherMagnetScript.IsBlockGrabbed());
     }
 
 
@@ -146,7 +148,7 @@ public class Magnet : MonoBehaviour
     {
         Debug.Log("Exited trigger");
 
-        if (gameObject.GetInstanceID() < collider.gameObject.GetInstanceID()) 
+        if (IsThisDecidingMagnet(gameObject, collider.gameObject)) 
         {
             Debug.Log("I am still the greatest, but am leaving now...");
             if (otherMagnetTransform != null)
@@ -169,7 +171,7 @@ public class Magnet : MonoBehaviour
     public void OnGrab()
     {
         Debug.Log("Grabbed: " + thisBlock.name);
-        if (fixedJoint != null)
+        if (LatchEnd.IsLatched() && LatchEnd.IsInitiator())
         {
             Debug.Log("grabbed and there's already a latch from this block - i should be the greater: " + thisBlock.name);
             if (otherMagnetScript == null)
@@ -182,7 +184,7 @@ public class Magnet : MonoBehaviour
                 Debug.LogWarning("Latched weirdness - stored other magnet but has no back reference");
                 return;
             }
-            if (otherMagnetScript.IsGrabbed())
+            if (otherMagnetScript.IsBlockGrabbed())
             {
                 Debug.Log("Unlatching as other block is also currently grabbed");
                 UnlatchOtherBlock();
@@ -197,7 +199,7 @@ public class Magnet : MonoBehaviour
             if (HasGreaterMagnetBackReference()) 
             {
                 Debug.Log("Got a back reference to greater magnet - i should be the lesser: " + thisBlock.name);
-                if (greaterMagnetBackReference.IsGrabbed()) {
+                if (greaterMagnetBackReference.IsBlockGrabbed()) {
                     Debug.Log("Unlatching via greater as other block is also currently grabbed");
                     greaterMagnetBackReference.UnlatchOtherBlock();
                 }
@@ -205,7 +207,7 @@ public class Magnet : MonoBehaviour
         }
     }
 
-    bool IsGrabbed()
+    bool IsBlockGrabbed()
     {
         return magneticBlock.IsGrabbed();
     }
@@ -342,5 +344,10 @@ public class Magnet : MonoBehaviour
     {
         shadowBlockMagnetAlignmentHandle.GetComponentsInChildren<MeshRenderer>()
             .ToList().ForEach(r => r.enabled = debugMode);
+    }
+
+    private static bool IsThisDecidingMagnet(GameObject thisMagnet, GameObject otherMagnet)
+    {
+        return thisMagnet.GetInstanceID() < otherMagnet.GetInstanceID();
     }
 }
