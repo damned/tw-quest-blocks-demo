@@ -4,7 +4,6 @@ using System.Linq;
 using UnityEngine;
 using UnityEngine.XR.Interaction.Toolkit;
 
-
 public class MagneticSnapper : MonoBehaviour
 {
     public GameObject shadowBlock;
@@ -21,13 +20,34 @@ public class MagneticSnapper : MonoBehaviour
     private Collider otherMagnetCollider = null;
     private GameObject otherMagnet = null;
     private Transform otherMagnetTransform = null; // NB null if free or latched
-    private FixedJoint fixedJoint = null;
     private MagneticSnapper otherMagnetScript = null;
     private MagneticSnapper greaterMagnetBackReference = null;
     private MagneticBlock magneticBlock;
 
     private ShadowCreator shadowCreator = new ShadowCreator();
     private MagnetAligner magnetAligner = new MagnetAligner();
+    
+    private FixedJoint fixedJoint = null;
+    private LatchEnd _latchEnd;
+    private LatchEnd LatchEnd {
+        get {
+            if (_latchEnd == null) {
+                _latchEnd = GetComponent<LatchEnd>();
+            }
+            return _latchEnd;
+        }
+    }
+
+    void OnEnable()
+    {
+        
+    }
+
+    void OnDisable()
+    {
+        
+    }
+
 
     void Start()
     {
@@ -193,7 +213,6 @@ public class MagneticSnapper : MonoBehaviour
             Debug.Log("I do have a reference to other magnet: attempt latch and hide shadow block");
             ShowRealBlock(true);
             ShowShadowBlock(false);
-            ReleaseGrabOnThisBlock();
             SnapAndLatchToOtherBlock();
         }
     }
@@ -208,13 +227,6 @@ public class MagneticSnapper : MonoBehaviour
         meshRenderer.enabled = showBlock;
     }
 
-    private void ReleaseGrabOnThisBlock()
-    {
-        var grabber = thisBlock.GetComponent<XRGrabInteractable>();
-        grabber.enabled = false;
-        grabber.enabled = true;
-    }
-
     private void SnapAndLatchToOtherBlock()
     {
         Debug.Log("Latching to other block, otherMagnetTransform: " + otherMagnetTransform.gameObject.name);
@@ -226,7 +238,7 @@ public class MagneticSnapper : MonoBehaviour
         thisMagnetCollider.enabled = false;
         otherMagnetCollider.enabled = false;
 
-        LatchThisBlockToOtherBlock(thisBlock, otherBlock);
+        LatchThisBlockToOtherBlock(thisBlock, otherBlock, otherMagnetTransform.GetComponent<MagneticSnapper>().LatchEnd);
 
         // save information for unlatching purposes
         // - otherMagnetCollider retained to be re-enabled after unlatching
@@ -269,6 +281,7 @@ public class MagneticSnapper : MonoBehaviour
         // nb there will be one per magnet
         Destroy(fixedJoint);
         fixedJoint = null;
+        LatchEnd.Unlatch();
 
         if (otherMagnetCollider == null)
         {
@@ -283,9 +296,10 @@ public class MagneticSnapper : MonoBehaviour
         Debug.Log("Unlatched");
     }
 
-    void LatchThisBlockToOtherBlock(GameObject thisBlock, GameObject otherBlock)
+    void LatchThisBlockToOtherBlock(GameObject thisBlock, GameObject otherBlock, LatchEnd otherLatchEnd)
     {
         fixedJoint = thisBlock.AddComponent<FixedJoint>(); // nb there will be one per magnet
+        LatchEnd.LatchTo(otherLatchEnd);
         var otherRigidbody = otherBlock.GetComponent<Rigidbody>();
         fixedJoint.connectedBody = otherRigidbody;
     }
