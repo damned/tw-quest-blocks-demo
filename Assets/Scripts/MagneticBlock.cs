@@ -7,7 +7,7 @@ public class MagneticBlock : MonoBehaviour
 {
     private bool isGrabbed = false;
     private XRGrabInteractable grabInteractable;
-    private List<MagneticSnapper> magnetScripts;
+    private List<Magnet> magnetScripts;
 
     // Start is called before the first frame update
     void Start()
@@ -18,7 +18,7 @@ public class MagneticBlock : MonoBehaviour
             grabInteractable.selectEntered.AddListener(OnGrab);
             grabInteractable.selectExited.AddListener(OnRelease);
         }
-        magnetScripts = GetComponentsInChildren<MagneticSnapper>().ToList();
+        magnetScripts = GetComponentsInChildren<Magnet>().ToList();
     }
 
     // Update is called once per frame

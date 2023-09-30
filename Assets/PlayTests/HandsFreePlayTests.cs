@@ -30,7 +30,7 @@ public class HandsFreePlayTests
         block2.GetComponent<Rigidbody>().isKinematic = true;
         Debug.Log("physics simulation mode: " + Physics.autoSimulation);
 
-        Assert.IsFalse(magnet2.GetComponent<MagneticSnapper>().IsLatched);
+        Assert.IsFalse(magnet2.GetComponent<Magnet>().IsLatched);
 
         for (int i = 0; i < 12; i++)
         {
@@ -40,7 +40,7 @@ public class HandsFreePlayTests
             yield return new WaitForFixedUpdate();
         }
         
-        Assert.IsTrue(magnet2.GetComponent<MagneticSnapper>().IsLatched);
+        Assert.IsTrue(magnet2.GetComponent<Magnet>().IsLatched);
 
         block2.transform.position = new Vector3(1, 1, 1);
         Assert.AreEqual(0f, block.transform.position.x, 0.001f);
@@ -70,7 +70,7 @@ public class HandsFreePlayTests
         magnet.layer = LayerMask.NameToLayer("Magnets");
         magnet.GetComponent<Collider>().isTrigger = true;
 
-        magnet.AddComponent<MagneticSnapper>();
+        magnet.AddComponent<Magnet>();
         magnet.transform.parent = block.transform;
         magnet.transform.localScale = Vector3.one * 0.3f;
         return magnet;

@@ -17,7 +17,7 @@ public class ShadowCreator
 
         Debug.Log("Created shadow block at: " + shadowBlock.transform.position);
 
-        var magnetScript = magnet.GetComponent<MagneticSnapper>();
+        var magnetScript = magnet.GetComponent<Magnet>();
 
         var shadowRenderer = shadowBlock.GetComponent<MeshRenderer>();
         if (magnetScript.shadowMaterial != null)
@@ -28,8 +28,8 @@ public class ShadowCreator
         shadowBlock.GetComponent<Collider>().enabled = false;
         shadowBlock.GetComponent<Rigidbody>().useGravity = false;
 
-        MagneticSnapper shadowMagnetScript = null;
-        foreach (var anyShadowMagnetScript in shadowBlock.GetComponentsInChildren<MagneticSnapper>())
+        Magnet shadowMagnetScript = null;
+        foreach (var anyShadowMagnetScript in shadowBlock.GetComponentsInChildren<Magnet>())
         {
             anyShadowMagnetScript.enabled = false; // disable scripts or we'll continually start more and more shadow blocks!
             anyShadowMagnetScript.GetComponent<Collider>().enabled = false;

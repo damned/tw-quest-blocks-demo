@@ -3,7 +3,7 @@ using System.Linq;
 
 using UnityEngine;
 
-public class MagneticSnapper : MonoBehaviour
+public class Magnet : MonoBehaviour
 {
     public GameObject shadowBlock;
     public GameObject shadowBlockMagnet;
@@ -19,8 +19,8 @@ public class MagneticSnapper : MonoBehaviour
     private Collider otherMagnetCollider = null;
     private GameObject otherMagnet = null;
     private Transform otherMagnetTransform = null; // NB null if free or latched
-    private MagneticSnapper otherMagnetScript = null;
-    private MagneticSnapper greaterMagnetBackReference = null;
+    private Magnet otherMagnetScript = null;
+    private Magnet greaterMagnetBackReference = null;
     private MagneticBlock magneticBlock;
 
     private ShadowCreator shadowCreator = new ShadowCreator();
@@ -211,9 +211,9 @@ public class MagneticSnapper : MonoBehaviour
     }
 
 
-    MagneticSnapper MagnetScriptOf(GameObject otherMagnet)
+    Magnet MagnetScriptOf(GameObject otherMagnet)
     {
-        return otherMagnet.GetComponent<MagneticSnapper>();
+        return otherMagnet.GetComponent<Magnet>();
     }
 
     public void OnRelease()
@@ -253,7 +253,7 @@ public class MagneticSnapper : MonoBehaviour
         thisMagnetCollider.enabled = false;
         otherMagnetCollider.enabled = false;
 
-        LatchThisBlockToOtherBlock(thisBlock, otherBlock, otherMagnetTransform.GetComponent<MagneticSnapper>().LatchEnd);
+        LatchThisBlockToOtherBlock(thisBlock, otherBlock, otherMagnetTransform.GetComponent<Magnet>().LatchEnd);
 
         // save information for unlatching purposes
         // - otherMagnetCollider retained to be re-enabled after unlatching
@@ -267,7 +267,7 @@ public class MagneticSnapper : MonoBehaviour
         Debug.Log("cleared, otherMagnetTransform = " + otherMagnetTransform);
     }
 
-    void SetLatchBackReference(MagneticSnapper greaterMagnetScript)
+    void SetLatchBackReference(Magnet greaterMagnetScript)
     {
         greaterMagnetBackReference = greaterMagnetScript;
     }

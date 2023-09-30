@@ -25,7 +25,7 @@ public class ShadowCreatorTests
 
             Assert.IsFalse(shadowBlock.GetComponent<Renderer>().enabled);
 
-            var shadowMagnetScript = shadowBlock.GetComponentInChildren<MagneticSnapper>();
+            var shadowMagnetScript = shadowBlock.GetComponentInChildren<Magnet>();
 
             Assert.IsFalse(shadowMagnetScript.enabled);
             Assert.IsFalse(shadowMagnet.GetComponent<Collider>().enabled);
@@ -49,7 +49,7 @@ public class ShadowCreatorTests
 
             Assert.IsFalse(shadowBlock.GetComponent<Renderer>().enabled);
 
-            var shadowMagnetScript = shadowMagnet.GetComponent<MagneticSnapper>();
+            var shadowMagnetScript = shadowMagnet.GetComponent<Magnet>();
 
             Assert.IsFalse(shadowMagnetScript.enabled);
             Assert.IsFalse(shadowMagnet.GetComponent<Collider>().enabled);
@@ -59,7 +59,7 @@ public class ShadowCreatorTests
             var secondShadowMagnetTransform = shadowBlock.transform.Find("Magnet2");
             var secondShadowMagnet = secondShadowMagnetTransform.gameObject;
 
-            Assert.IsFalse(secondShadowMagnet.GetComponent<MagneticSnapper>().enabled);
+            Assert.IsFalse(secondShadowMagnet.GetComponent<Magnet>().enabled);
             Assert.IsFalse(secondShadowMagnet.GetComponent<Collider>().enabled);
             
             Assert.That(secondShadowMagnet.transform.localPosition, Is.EqualTo(secondMagnet.transform.localPosition).Using(closeEnoughVectorComparer));
@@ -81,7 +81,7 @@ public class ShadowCreatorTests
     {
         var magnet = GameObject.CreatePrimitive(PrimitiveType.Sphere);
 
-        magnet.AddComponent<MagneticSnapper>();
+        magnet.AddComponent<Magnet>();
         magnet.transform.parent = block.transform;
         return magnet;
     }
