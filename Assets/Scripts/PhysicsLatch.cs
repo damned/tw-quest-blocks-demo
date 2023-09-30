@@ -1,24 +1,25 @@
-using System;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class PhysicsLatch : Latch
 {
-    private GameObject fromBlock;
-    private GameObject toBlock;
+    private readonly GameObject fromBlock;
+    private readonly GameObject toBlock;
+    private readonly LatchEnd fromEnd;
+    private readonly LatchEnd toEnd;
     private FixedJoint fixedJoint;
 
-    public PhysicsLatch(GameObject fromBlock, GameObject toBlock)
+    public PhysicsLatch(LatchEnd fromEnd, LatchEnd toEnd)
     {
-        this.fromBlock = fromBlock;
-        this.toBlock = toBlock;
+        this.fromEnd = fromEnd;
+        this.toEnd = fromEnd;
+        fromBlock = fromEnd.Block;
+        toBlock = toEnd.Block;
     }
 
-    public static Latch LatchBetween(GameObject fromBlock, GameObject toBlock)
+    public static Latch LatchBetween(LatchEnd fromEnd, LatchEnd toEnd)
     {
-        Debug.Log("creating latch, toBlock: " + toBlock);
-        return new PhysicsLatch(fromBlock, toBlock).Apply();
+        Debug.Log("creating latch, to latch end: " + toEnd);
+        return new PhysicsLatch(fromEnd, toEnd).Apply();
     }
 
     private Latch Apply()
@@ -33,6 +34,8 @@ public class PhysicsLatch : Latch
     {
         GameObject.Destroy(fixedJoint);
         fixedJoint = null;
+        fromEnd.OnUnlatch();
+        toEnd.OnUnlatch();
     }
 
 }

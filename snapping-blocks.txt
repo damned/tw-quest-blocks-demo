@@ -37,7 +37,9 @@ todo
   - [ ] double-hand on release
 [ ] refactor to extract latch so that pipes have magnets
   - [x] spike against blocks without Rigidbody - xrgrabi doesn't work without rigidbody - these are just kinematic
-  - [ ] extract latch and latch ends
+  - [x] extract latch and latch ends
+  - [ ] remove Magnet.cs latch back refs (handle in Latch)
+  - [ ] move unlatch into latch
   - [ ] apply vs kinematic
   - [ ] get into same project - add as snapping scene
   - [ ] copy pipes into snapping scene

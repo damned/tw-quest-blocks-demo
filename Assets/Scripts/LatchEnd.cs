@@ -1,10 +1,14 @@
-using System;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class LatchEnd : MonoBehaviour
 {
+    public GameObject Block
+    {
+        get {
+            return block;
+        }
+    }
+
     private Latch latch = null;
     private bool isInitiator = false;
     private GameObject block;
@@ -33,13 +37,17 @@ public class LatchEnd : MonoBehaviour
         isInitiator = true;
         other.isInitiator = false;
 
-        latch = PhysicsLatch.LatchBetween(block, other.block);
+        latch = PhysicsLatch.LatchBetween(this, other);
         other.latch = latch;
     }
 
     public void Unlatch()
     {
         latch.Destroy();
+    }
+
+    public void OnUnlatch()
+    {
         latch = null;
     }
 

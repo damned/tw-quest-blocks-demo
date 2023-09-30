@@ -247,13 +247,8 @@ public class Magnet : MonoBehaviour
         Debug.Log("Latching to other block, otherMagnetTransform: " + otherMagnetTransform.gameObject.name);
         SnapThisBlockToOther(thisBlock, otherMagnetTransform);
 
-        var otherBlock = otherMagnetTransform.parent.gameObject;
-
-        // disable magnet colliders so don't keep on rehashing all this
-        thisMagnetCollider.enabled = false;
-        otherMagnetCollider.enabled = false;
-
-        LatchThisBlockToOtherBlock(otherMagnetTransform.GetComponent<Magnet>().LatchEnd);
+        DisableMagnets();
+        LatchEnd.LatchTo(otherMagnetTransform.GetComponent<Magnet>().LatchEnd);
 
         // save information for unlatching purposes
         // - otherMagnetCollider retained to be re-enabled after unlatching
@@ -265,6 +260,12 @@ public class Magnet : MonoBehaviour
         otherMagnetTransform = null; // NB could theoretically get multiple collisions... but not if blocks and magnets physically prevent it
         otherMagnet = null;
         Debug.Log("cleared, otherMagnetTransform = " + otherMagnetTransform);
+    }
+
+    private void DisableMagnets()
+    {
+        thisMagnetCollider.enabled = false;
+        otherMagnetCollider.enabled = false;
     }
 
     void SetLatchBackReference(Magnet greaterMagnetScript)
@@ -301,11 +302,6 @@ public class Magnet : MonoBehaviour
 
         otherMagnetCollider = null;
         Debug.Log("Unlatched");
-    }
-
-    void LatchThisBlockToOtherBlock(LatchEnd otherLatchEnd)
-    {
-        LatchEnd.LatchTo(otherLatchEnd);
     }
 
     void SnapThisBlockToOther(GameObject thisBlock, Transform otherMagnetTransform)
