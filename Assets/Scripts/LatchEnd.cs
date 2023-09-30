@@ -31,6 +31,7 @@ public class LatchEnd : MonoBehaviour
     public void LatchTo(LatchEnd other)
     {
         latch = new PhysicsLatch();
+        other.latch = latch;
     }
 
     public void Unlatch()

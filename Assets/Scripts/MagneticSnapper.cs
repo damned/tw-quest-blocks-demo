@@ -31,11 +31,18 @@ public class MagneticSnapper : MonoBehaviour
     private LatchEnd LatchEnd {
         get {
             if (_latchEnd == null) {
-                _latchEnd = GetComponent<LatchEnd>();
+                _latchEnd = gameObject.AddComponent<LatchEnd>();
             }
             return _latchEnd;
         }
     }
+
+    public bool IsLatched { 
+        get {
+            return LatchEnd.IsLatched();
+        } 
+    }
+
 
     void OnEnable()
     {
@@ -53,6 +60,11 @@ public class MagneticSnapper : MonoBehaviour
         Debug.Log("magnet instance id: " + gameObject.GetInstanceID());
         thisBlock = transform.parent.gameObject;
         magneticBlock = thisBlock.GetComponent<MagneticBlock>();
+        if (magneticBlock == null)
+        {
+            throw new Exception("cannot Start magnet: magnetic block parent of magnets needs a MagneticBlock script");
+        }
+
         meshRenderer = thisBlock.GetComponent<Renderer>();
         defaultMaterial = meshRenderer.material;
         thisMagnetCollider = GetComponent<Collider>();
@@ -122,7 +134,11 @@ public class MagneticSnapper : MonoBehaviour
 
     private bool IsNotGrabbedByBothHands(GameObject otherMagnet)
     {
-        return !(IsGrabbed() && MagnetScriptOf(otherMagnet).IsGrabbed());
+        Debug.Log("other magnet: " + otherMagnet.name);
+        var otherMagnetScript = MagnetScriptOf(otherMagnet);
+
+        Debug.Log("other magnet script: " + otherMagnetScript);
+        return !(IsGrabbed() && otherMagnetScript.IsGrabbed());
     }
 
 
