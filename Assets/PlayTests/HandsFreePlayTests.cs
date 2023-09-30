@@ -3,6 +3,7 @@ using System.Collections;
 using NUnit.Framework;
 
 using UnityEngine;
+using UnityEngine.PlayerLoop;
 using UnityEngine.TestTools;
 using UnityEngine.TestTools.Utils;
 
@@ -29,6 +30,10 @@ public class HandsFreePlayTests
 
         block2.GetComponent<Rigidbody>().isKinematic = true;
         Debug.Log("physics simulation mode: " + Physics.autoSimulation);
+
+        yield return new Update();
+        
+        Debug.Log("waited for update and thereby initialisation");
 
         Assert.IsFalse(magnet2.GetComponent<Magnet>().IsLatched);
 

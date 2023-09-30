@@ -26,13 +26,9 @@ public class Magnet : MonoBehaviour
     private ShadowCreator shadowCreator = new ShadowCreator();
     private MagnetAligner magnetAligner = new MagnetAligner();
     
-    private FixedJoint fixedJoint = null;
     private LatchEnd _latchEnd;
     private LatchEnd LatchEnd {
         get {
-            if (_latchEnd == null) {
-                _latchEnd = gameObject.AddComponent<LatchEnd>();
-            }
             return _latchEnd;
         }
     }
@@ -57,6 +53,8 @@ public class Magnet : MonoBehaviour
 
     void Start()
     {
+        _latchEnd = gameObject.AddComponent<LatchEnd>();
+
         Debug.Log("magnet instance id: " + gameObject.GetInstanceID());
         thisBlock = transform.parent.gameObject;
         magneticBlock = thisBlock.GetComponent<MagneticBlock>();
@@ -255,7 +253,7 @@ public class Magnet : MonoBehaviour
         thisMagnetCollider.enabled = false;
         otherMagnetCollider.enabled = false;
 
-        LatchThisBlockToOtherBlock(thisBlock, otherBlock, otherMagnetTransform.GetComponent<Magnet>().LatchEnd);
+        LatchThisBlockToOtherBlock(otherMagnetTransform.GetComponent<Magnet>().LatchEnd);
 
         // save information for unlatching purposes
         // - otherMagnetCollider retained to be re-enabled after unlatching
@@ -284,20 +282,12 @@ public class Magnet : MonoBehaviour
     void UnlatchOtherBlock()
     {
         Debug.Log("Unlatching...");
-        if (fixedJoint == null)
+        if (!LatchEnd.IsLatched())
         {
-            Debug.Log("Cannot unlatch - no fixed joint to unlatch");
+            Debug.Log("Cannot unlatch - latch end reckons not latched");
             return;
         }
 
-        if (fixedJoint.connectedBody == null)
-        {
-            Debug.LogWarning("Unlatch weirdness - fixed joint has no connected body");
-        }
-
-        // nb there will be one per magnet
-        Destroy(fixedJoint);
-        fixedJoint = null;
         LatchEnd.Unlatch();
 
         if (otherMagnetCollider == null)
@@ -313,12 +303,9 @@ public class Magnet : MonoBehaviour
         Debug.Log("Unlatched");
     }
 
-    void LatchThisBlockToOtherBlock(GameObject thisBlock, GameObject otherBlock, LatchEnd otherLatchEnd)
+    void LatchThisBlockToOtherBlock(LatchEnd otherLatchEnd)
     {
-        fixedJoint = thisBlock.AddComponent<FixedJoint>(); // nb there will be one per magnet
         LatchEnd.LatchTo(otherLatchEnd);
-        var otherRigidbody = otherBlock.GetComponent<Rigidbody>();
-        fixedJoint.connectedBody = otherRigidbody;
     }
 
     void SnapThisBlockToOther(GameObject thisBlock, Transform otherMagnetTransform)

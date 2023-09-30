@@ -7,14 +7,13 @@ public class LatchEnd : MonoBehaviour
 {
     private Latch latch = null;
     private bool isInitiator = false;
+    private GameObject block;
 
-    // Start is called before the first frame update
     void Start()
     {
-        
+        block = transform.parent.gameObject;
     }
 
-    // Update is called once per frame
     void Update()
     {
         
@@ -33,7 +32,8 @@ public class LatchEnd : MonoBehaviour
     {
         isInitiator = true;
         other.isInitiator = false;
-        latch = new PhysicsLatch();
+
+        latch = PhysicsLatch.LatchBetween(block, other.block);
         other.latch = latch;
     }
 
@@ -47,4 +47,5 @@ public class LatchEnd : MonoBehaviour
     {
         return isInitiator;
     }
+
 }
