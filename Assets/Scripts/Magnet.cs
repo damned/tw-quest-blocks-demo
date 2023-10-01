@@ -94,9 +94,9 @@ public class Magnet : MonoBehaviour
                 var otherMagnet = collider.gameObject;
                 otherMagnetTransform = otherMagnet.transform;
 
-                if (IsGrabbedByBothHands(otherMagnet))
+                if (AtLeastOneBlockIsGrabbed(otherMagnet))
                 {
-                    Debug.Log("grabbed by both hands - started snapping");
+                    Debug.Log("one or more blocks grabbed - start snapping");
                     ShowRealBlock(false);
                     ShowShadowBlock(true);
 
@@ -104,7 +104,7 @@ public class Magnet : MonoBehaviour
                 }
                 else
                 {
-                    Debug.Log("hands free or singled hand attraction -> immediate latch");
+                    Debug.Log("hands free attraction -> immediate latch");
                     ShowRealBlock(true);
                     ShowShadowBlock(false);
                     SnapAndLatchToOtherBlock();
@@ -114,13 +114,13 @@ public class Magnet : MonoBehaviour
         }
     }
 
-    private bool IsGrabbedByBothHands(GameObject otherMagnet)
+    private bool AtLeastOneBlockIsGrabbed(GameObject otherMagnet)
     {
         Debug.Log("other magnet: " + otherMagnet.name);
         var otherMagnetScript = MagnetScriptOf(otherMagnet);
 
         Debug.Log("other magnet script: " + otherMagnetScript);
-        return IsBlockGrabbed() && otherMagnetScript.IsBlockGrabbed();
+        return IsBlockGrabbed() || otherMagnetScript.IsBlockGrabbed();
     }
 
     void OnTriggerExit(Collider collider)
