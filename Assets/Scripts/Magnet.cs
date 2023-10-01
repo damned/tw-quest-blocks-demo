@@ -94,11 +94,6 @@ public class Magnet : MonoBehaviour
                 var otherMagnet = collider.gameObject;
                 otherMagnetTransform = otherMagnet.transform;
 
-                if (otherMagnetTransform.Equals(transform))
-                {
-                    Debug.LogWarning("oops looks like we're colliding with ourselves?!");
-                }
-
                 if (IsGrabbedByBothHands(otherMagnet))
                 {
                     Debug.Log("grabbed by both hands - started snapping");

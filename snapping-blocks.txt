@@ -31,11 +31,32 @@ todo
 [x] allow grab-free latch
 [x] allow one-handed latch
 [x] allow lesser release/latch - supsiciously came for free - i think because becomes one-handed other way
+[x] multiple magnets per block
+  - might need to choose the greater block more carefully
+[x] move to prefabs/replication - perhaps with disabled collider
+  - [x] dynamically parent shadow block
+[x] add MagneticBlock script to parent that tracks the magnets and their attachments (links? latches?)
+[x] MagneticSnapper -> Magnet ?
+[ ] latch kinematic to kinematic
+  - [ ] separate PhysicsBinder from Latch
+  - [ ] add Latch logic to select Binder
+  - [ ] add KinematicsBinder
 [x] integration tests
-  - [x] hands-free
+  - [x] hands-free latch
+  - [ ] extract test support to Face() and MoveWithin()
+  - [ ] double-hand grab snapping
   - [ ] single hand on release
   - [ ] double-hand on release
 [x] remove manual rigging startup and variables
+[ ] move snap recognition to separate class 
+[ ] move snapping behaviour to separate component
+[ ] snap precedence:
+  - [ ] review and confine decider to initial decision
+  - [ ] snap non-kinematic to kinematic
+  - [ ] snap single to compound
+[ ] unlatch behaviour tweaks:
+  - [ ] leaf block on non-leaf block unlatches with single hand
+  - [ ] non-leaf block moves compound
 [ ] refactor to extract latch so that pipes have magnets
   - [x] spike against blocks without Rigidbody - xrgrabi doesn't work without rigidbody - these are just kinematic
   - [x] extract latch and latch ends
@@ -44,26 +65,14 @@ todo
   - [ ] apply vs kinematic
   - [ ] get into same project - add as snapping scene
   - [ ] copy pipes into snapping scene
-[ ] snap precedence:
-  - [ ] snap non-kinematic to kinematic
-  - [ ] snap single to compound
-[ ] unlatch behaviour tweaks:
-  - [ ] leaf block on non-leaf block unlatches with single hand
-  - [ ] non-leaf block moves compound
 [ ] isolate xrgi interaction and support other implementations
 [ ] mode to remove physics when attached
-[x] multiple magnets per block
-  - might need to choose the greater block more carefully
-[x] move to prefabs/replication - perhaps with disabled collider
-  - [x] dynamically parent shadow block
 [ ] make shadow grey colour only in debug mode
 [ ] test with loads of blocks
 [ ] when is snapping re-test for alignment and update in Update()
 [ ] rumble when snapped and grabbing both
 [ ] rumble when attracting
 [ ] rumble when straining 
-[ ] MagneticSnapper -> Magnet ?
-[ ] add MagneticBlock script to parent that tracks the magnets and their attachments (links? latches?)
 [ ] re-visit who is the greater: most blocks attached, tightest grip, moving less, was already fixed, least recently grabbed?
 [ ] try break thresholds and smash up a compound
 [ ] extra ideas from H
