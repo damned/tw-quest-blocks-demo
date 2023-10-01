@@ -18,7 +18,19 @@ public class Latch
     public static Latch LatchBetween(LatchEnd fromEnd, LatchEnd toEnd)
     {
         Debug.Log("creating latch from " + fromEnd + ", to latch end: " + toEnd);
-        return new Latch(fromEnd, toEnd, new PhysicsBinder()).Apply();
+        LatchBinder latchBinder;
+        if (fromEnd.IsKinematic() && toEnd.IsKinematic())
+        {
+            Debug.Log("creating kinematics binder");
+            latchBinder = new KinematicsBinder();
+        }
+        else
+        {
+            Debug.Log("creating physics binder");
+            latchBinder = new PhysicsBinder();
+        }
+
+        return new Latch(fromEnd, toEnd, latchBinder).Apply();
     }
 
     public Latch Apply()

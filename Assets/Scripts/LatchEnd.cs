@@ -14,11 +14,14 @@ public class LatchEnd : MonoBehaviour
     private bool isInitiator = false;
     private GameObject block;
     private Magnet magnet;
+    private bool isKinematic;
+
 
     void Start()
     {
         magnet = GetComponent<Magnet>();
         block = transform.parent.gameObject;
+        isKinematic = CaptureWhetherIsKinematicWhileNoGrabbingGoingOn();
     }
 
     void Update()
@@ -87,5 +90,20 @@ public class LatchEnd : MonoBehaviour
     public override string ToString()
     {
         return "[LatchEnd at " + transform.localPosition + " on " + block.name + "]";
+    }
+
+    public bool IsKinematic()
+    {
+        return isKinematic;
+    }
+
+    private bool CaptureWhetherIsKinematicWhileNoGrabbingGoingOn()
+    {
+        var rigidbody = block.GetComponent<Rigidbody>();
+        if (rigidbody == null)
+        {
+            throw new Exception("only rigidbody blocks supported ATM");
+        }
+        return rigidbody.isKinematic;
     }
 }
