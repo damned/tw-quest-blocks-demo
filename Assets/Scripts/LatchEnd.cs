@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 
 public class LatchEnd : MonoBehaviour
@@ -12,9 +13,11 @@ public class LatchEnd : MonoBehaviour
     private Latch latch = null;
     private bool isInitiator = false;
     private GameObject block;
+    private Magnet magnet;
 
     void Start()
     {
+        magnet = GetComponent<Magnet>();
         block = transform.parent.gameObject;
     }
 
@@ -32,13 +35,21 @@ public class LatchEnd : MonoBehaviour
         return false;
     }
 
-    public void LatchTo(LatchEnd other)
+    public void LatchTo(LatchEnd to)
     {
+        if (IsLatched())
+        {
+            Debug.LogWarning("woah, i think your logic is off, not going to latch again - i'm already latched via: " + latch);
+            return;
+        }
+        if (this.block.name == to.block.name)
+        {
+            Debug.LogWarning("woah, i think your logic is off, you're telling me to latch to myself: " + this);
+            return;
+        }
         isInitiator = true;
-        other.isInitiator = false;
-
-        latch = PhysicsLatch.LatchBetween(this, other);
-        other.latch = latch;
+        latch = PhysicsLatch.LatchBetween(this, to);
+        magnet.OnLatch();
     }
 
     public void Unlatch()
@@ -46,9 +57,17 @@ public class LatchEnd : MonoBehaviour
         latch.Destroy();
     }
 
+    public void OnLatch(Latch latchInitiatedByOther)
+    {
+        isInitiator = false;
+        latch = latchInitiatedByOther;
+        magnet.OnLatch();
+    }
+
     public void OnUnlatch()
     {
         latch = null;
+        magnet.OnUnlatch();
     }
 
     public bool IsInitiator()
@@ -56,4 +75,22 @@ public class LatchEnd : MonoBehaviour
         return isInitiator;
     }
 
+    public bool IsOtherBlockGrabbed()
+    {
+        if (!IsLatched())
+        {
+            return false;
+        }
+        return latch.OtherEndTo(this).IsBlockGrabbed();
+    }
+
+    public bool IsBlockGrabbed()
+    {
+        return gameObject.GetComponent<Magnet>().IsBlockGrabbed();
+    }
+
+    public override string ToString()
+    {
+        return "[LatchEnd at " + transform.localPosition + " on " + block.name + "]";
+    }
 }

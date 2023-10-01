@@ -1,4 +1,6 @@
 public interface Latch
 {
-    public void Destroy();
+    Latch Apply();
+    void Destroy();
+    LatchEnd OtherEndTo(LatchEnd refLatchEnd);
 }

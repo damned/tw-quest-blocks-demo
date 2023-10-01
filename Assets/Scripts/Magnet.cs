@@ -5,8 +5,6 @@ using UnityEngine;
 
 public class Magnet : MonoBehaviour
 {
-    public GameObject shadowBlock;
-    public GameObject shadowBlockMagnet;
     public Material shadowMaterial;
     public bool debugMode = false;
 
@@ -15,12 +13,10 @@ public class Magnet : MonoBehaviour
     private Material defaultMaterial;
     private Renderer meshRenderer;
     private GameObject shadowBlockMagnetAlignmentHandle;
+    private GameObject shadowBlock;
+    private GameObject shadowBlockMagnet;
 
-    private Collider otherMagnetCollider = null;
-    private GameObject otherMagnet = null;
     private Transform otherMagnetTransform = null; // NB null if free or latched
-    private Magnet otherMagnetScript = null;
-    private Magnet greaterMagnetBackReference = null;
     private MagneticBlock magneticBlock;
 
     private ShadowCreator shadowCreator = new ShadowCreator();
@@ -67,29 +63,19 @@ public class Magnet : MonoBehaviour
         defaultMaterial = meshRenderer.material;
         thisMagnetCollider = GetComponent<Collider>();
 
-        if (shadowBlock != null)
-        {
-            Debug.Log("Using manually rigged shadow block for: " + thisBlock.name);
-            shadowBlockMagnetAlignmentHandle = shadowBlock.transform.parent.gameObject;
-        }
-        else
-        {
-            if (shadowBlockMagnet == null)
-            {
-                shadowBlockMagnet = shadowCreator.CreateShadowBlock(gameObject);
-            }
-            shadowBlock = shadowBlockMagnet.transform.parent.gameObject;
+        shadowBlockMagnet = shadowCreator.CreateShadowBlock(gameObject);
+        shadowBlock = shadowBlockMagnet.transform.parent.gameObject;
 
-            Debug.Log("Dynamically rigging shadow block alignment handle for: " + thisBlock.name);
-            shadowBlockMagnetAlignmentHandle = magnetAligner.CreateAlignmentHandle(shadowBlockMagnet);
-        }
+        Debug.Log("Dynamically rigging shadow block alignment handle for: " + thisBlock.name);
+        shadowBlockMagnetAlignmentHandle = magnetAligner.CreateAlignmentHandle(shadowBlockMagnet);
+
         InitDebugMode();
         Debug.Log("Default material: " + defaultMaterial);
     }
 
     void Update()
     {
-        if (otherMagnetTransform != null)
+        if (IsSnapping())
         {
             MoveShadowMagnetAlignmentHandleToFaceMagnet(otherMagnetTransform);
         }
@@ -97,22 +83,31 @@ public class Magnet : MonoBehaviour
 
     void OnTriggerEnter(Collider collider)
     {
-        Debug.Log("Entered trigger");
+        Debug.Log("Entered trigger: " + thisBlock.name);
         if (IsThisDecidingMagnet(gameObject, collider.gameObject))
         {
-            Debug.Log("I am the greatest: " + thisBlock.name);
+            Debug.Log("I am the decider: " + thisBlock.name);
             var signedAngle = Vector3.SignedAngle(transform.forward, collider.transform.forward, Vector3.up);
             Debug.Log("Signed angle: " + signedAngle);
             if (Math.Abs(signedAngle) > 165f)
             {
-                otherMagnetCollider = collider;
-                otherMagnet = collider.gameObject;
-
-                Debug.Log("setting otherMagnetTransform due to alignment in trigger enter");
-                Debug.Log("otherMagnet: " + otherMagnet);
+                var otherMagnet = collider.gameObject;
                 otherMagnetTransform = otherMagnet.transform;
 
-                if (IsNotGrabbedByBothHands(otherMagnet))
+                if (otherMagnetTransform.Equals(transform))
+                {
+                    Debug.LogWarning("oops looks like we're colliding with ourselves?!");
+                }
+
+                if (IsGrabbedByBothHands(otherMagnet))
+                {
+                    Debug.Log("grabbed by both hands - started snapping");
+                    ShowRealBlock(false);
+                    ShowShadowBlock(true);
+
+                    MoveShadowMagnetAlignmentHandleToFaceMagnet(otherMagnetTransform);
+                }
+                else
                 {
                     Debug.Log("hands free or singled hand attraction -> immediate latch");
                     ShowRealBlock(true);
@@ -120,92 +115,57 @@ public class Magnet : MonoBehaviour
                     SnapAndLatchToOtherBlock();
                     Debug.Log("Latched");
                 }
-                else
-                {
-                    // start snapping = make shadow block visible instead of this block
-                    ShowRealBlock(false);
-                    ShowShadowBlock(true);
-
-                    MoveShadowMagnetAlignmentHandleToFaceMagnet(otherMagnetTransform);
-                }
             }
         }
     }
 
-    private bool IsNotGrabbedByBothHands(GameObject otherMagnet)
+    private bool IsGrabbedByBothHands(GameObject otherMagnet)
     {
         Debug.Log("other magnet: " + otherMagnet.name);
         var otherMagnetScript = MagnetScriptOf(otherMagnet);
 
         Debug.Log("other magnet script: " + otherMagnetScript);
-        return !(IsBlockGrabbed() && otherMagnetScript.IsBlockGrabbed());
+        return IsBlockGrabbed() && otherMagnetScript.IsBlockGrabbed();
     }
-
 
     void OnTriggerExit(Collider collider)
     {
         Debug.Log("Exited trigger");
-
-        if (IsThisDecidingMagnet(gameObject, collider.gameObject)) 
+        if (IsSnapping())
         {
-            Debug.Log("I am still the greatest, but am leaving now...");
-            if (otherMagnetTransform != null)
-            {
-                Debug.Log("I do have a reference to other magnet: hide shadow, show real block");
-                ShowRealBlock(true);
-                ShowShadowBlock(false);
-            }
-            else
-            {
-                Debug.Log("Oh, i don't have a reference to other magnet");
-            }
-            Debug.Log("clearing otherMagnetTransform after exiting trigger");
-            otherMagnetTransform = null; // NB could theoretically get multiple collisions... but not if blocks and magnets physically prevent it
-            otherMagnet = null;
-            otherMagnetCollider = null;
+            ShowRealBlock(true);
+            ShowShadowBlock(false);
         }
+        else
+        {
+            Debug.Log("Oh, i don't have a reference to other magnet");
+        }
+        otherMagnetTransform = null; // NB could theoretically get multiple collisions... but not if blocks and magnets physically prevent it
+    }
+
+    private bool IsSnapping()
+    {
+        return otherMagnetTransform != null;
     }
 
     public void OnGrab()
     {
         Debug.Log("Grabbed: " + thisBlock.name);
-        if (LatchEnd.IsLatched() && LatchEnd.IsInitiator())
+        if (LatchEnd.IsLatched())
         {
-            Debug.Log("grabbed and there's already a latch from this block - i should be the greater: " + thisBlock.name);
-            if (otherMagnetScript == null)
-            {
-                Debug.LogWarning("Latched weirdness - no stored reference to otherMagnetScript");
-                return;
-            }
-            if (!otherMagnetScript.HasGreaterMagnetBackReference())
-            {
-                Debug.LogWarning("Latched weirdness - stored other magnet but has no back reference");
-                return;
-            }
-            if (otherMagnetScript.IsBlockGrabbed())
+            if (LatchEnd.IsOtherBlockGrabbed())
             {
                 Debug.Log("Unlatching as other block is also currently grabbed");
-                UnlatchOtherBlock();
+                LatchEnd.Unlatch();
             }
             else
             {
                 Debug.Log("Not unlatching as other block not currently grabbed");
             }
         }
-        else 
-        {
-            if (HasGreaterMagnetBackReference()) 
-            {
-                Debug.Log("Got a back reference to greater magnet - i should be the lesser: " + thisBlock.name);
-                if (greaterMagnetBackReference.IsBlockGrabbed()) {
-                    Debug.Log("Unlatching via greater as other block is also currently grabbed");
-                    greaterMagnetBackReference.UnlatchOtherBlock();
-                }
-            }
-        }
     }
 
-    bool IsBlockGrabbed()
+    public bool IsBlockGrabbed()
     {
         return magneticBlock.IsGrabbed();
     }
@@ -219,16 +179,16 @@ public class Magnet : MonoBehaviour
     public void OnRelease()
     {
         Debug.Log("Released: " + thisBlock.name);
-        if (otherMagnetTransform == null)
-        {
-            Debug.Log("Oh, i don't have a reference to other magnet - either free or latched");
-        }
-        else
+        if (IsSnapping())
         {
             Debug.Log("I do have a reference to other magnet: attempt latch and hide shadow block");
             ShowRealBlock(true);
             ShowShadowBlock(false);
             SnapAndLatchToOtherBlock();
+        }
+        else
+        {
+            Debug.Log("Not snapping so release without latching");
         }
     }
 
@@ -247,61 +207,22 @@ public class Magnet : MonoBehaviour
         Debug.Log("Latching to other block, otherMagnetTransform: " + otherMagnetTransform.gameObject.name);
         SnapThisBlockToOther(thisBlock, otherMagnetTransform);
 
-        DisableMagnets();
         LatchEnd.LatchTo(otherMagnetTransform.GetComponent<Magnet>().LatchEnd);
 
-        // save information for unlatching purposes
-        // - otherMagnetCollider retained to be re-enabled after unlatching
-        // - otherMagnetScript retained for querying/updating other magnet
-        otherMagnetScript = MagnetScriptOf(otherMagnet);
-        otherMagnetScript.SetLatchBackReference(this);
-
-        Debug.Log("clearing otherMagnetTransform after latch: " + thisBlock.name);
+        Debug.Log("clearing otherMagnetTransform (snapping) after latch: " + thisBlock.name);
         otherMagnetTransform = null; // NB could theoretically get multiple collisions... but not if blocks and magnets physically prevent it
-        otherMagnet = null;
-        Debug.Log("cleared, otherMagnetTransform = " + otherMagnetTransform);
     }
 
-    private void DisableMagnets()
+    public void OnLatch()
     {
+        Debug.Log("turning off magnet collider at " + transform.localPosition + " on " + thisBlock.name);
         thisMagnetCollider.enabled = false;
-        otherMagnetCollider.enabled = false;
     }
 
-    void SetLatchBackReference(Magnet greaterMagnetScript)
+    public void OnUnlatch()
     {
-        greaterMagnetBackReference = greaterMagnetScript;
-    }
-
-    bool HasGreaterMagnetBackReference()
-    {
-        return greaterMagnetBackReference != null;
-    }
-
-    // here for reference
-
-    void UnlatchOtherBlock()
-    {
-        Debug.Log("Unlatching...");
-        if (!LatchEnd.IsLatched())
-        {
-            Debug.Log("Cannot unlatch - latch end reckons not latched");
-            return;
-        }
-
-        LatchEnd.Unlatch();
-
-        if (otherMagnetCollider == null)
-        {
-            Debug.LogWarning("Unlatch weirdness - otherMagnetCollider not set");
-        }
-
-        // this should re-trigger snapping if magnet colliders overlap
+        Debug.Log("turning on magnet collider at " + transform.localPosition + " on " + thisBlock.name);
         thisMagnetCollider.enabled = true;
-        otherMagnetCollider.enabled = true;
-
-        otherMagnetCollider = null;
-        Debug.Log("Unlatched");
     }
 
     void SnapThisBlockToOther(GameObject thisBlock, Transform otherMagnetTransform)
