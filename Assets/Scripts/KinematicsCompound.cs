@@ -5,8 +5,15 @@ using UnityEngine.XR.Interaction.Toolkit.Transformers;
 
 public class KinematicsCompound : MonoBehaviour
 {
+
     void Start()
     {
+        var grabInteractable = GetComponent<XRGrabInteractable>();
+        if (grabInteractable != null)
+        {
+            grabInteractable.selectEntered.AddListener(OnGrab);
+            grabInteractable.selectExited.AddListener(OnRelease);
+        }
     }
 
     void Update()
@@ -41,6 +48,31 @@ public class KinematicsCompound : MonoBehaviour
     public void AddBlock(GameObject block)
     {
         BindIntoCompound(block, transform);
+    }
+
+    public void OnGrab(SelectEnterEventArgs enterEvent)
+    {
+        Pose attachPose = enterEvent.interactableObject.GetAttachPoseOnSelect(enterEvent.interactorObject);
+        Debug.Log("on compound grab, attach pose: " + attachPose);
+        int count = transform.childCount;
+        Debug.Log("compound child count: " + count);
+        for(int i = 0; i < count; i++)
+        {
+            Transform blockTransform = transform.GetChild(i);
+            var block = blockTransform.gameObject;
+            var collider = block.GetComponent<Collider>();
+
+            var closestPoint = collider == null ? "n/a" : "" + collider.ClosestPoint(attachPose.position);
+            Debug.Log("for ref, child / block " + block.name + 
+                ", transform: " + blockTransform.position + 
+                ", distance: " + Vector3.Distance(blockTransform.position, attachPose.position) +
+                ", closest point on collider: " + closestPoint);
+        }
+    }
+
+    public void OnRelease(SelectExitEventArgs exitEvent)
+    {
+        Debug.Log("on compound release");
     }
 
     private static void BindIntoCompound(GameObject block, Transform compoundTransform)

@@ -37,12 +37,12 @@ todo
   - [x] dynamically parent shadow block
 [x] add MagneticBlock script to parent that tracks the magnets and their attachments (links? latches?)
 [x] MagneticSnapper -> Magnet ?
-[ ] latch kinematic to kinematic
+[x] latch kinematic to kinematic
   - [x] separate PhysicsBinder from Latch
   - [x] add Latch logic to select Binder
   - [x] add KinematicsBinder
 [ ] unlatch from KinematicsBinder
-  - [ ] add KinematicsCompound script and move xrgi init there
+  - [x] add KinematicsCompound script and move xrgi init there
   - [ ] bind compound to grab and release events
   = [ ] compound to delegate grab and release to magnetic blocks
 [ ] fix kinematics binder re-registration bug
