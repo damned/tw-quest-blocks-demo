@@ -45,6 +45,13 @@ todo
   - [ ] add KinematicsCompound script and move xrgi init there
   - [ ] bind compound to grab and release events
   = [ ] compound to delegate grab and release to magnetic blocks
+[ ] fix kinematics binder re-registration bug
+  - grab R Kinematic (decider), snap/latch onto L kinematic - cannot be grabbed, extra empty KinematicsCompound object, error:
+    A collider used by an Interactable object is already registered with another Interactable object. 
+    The BlockFree2 (UnityEngine.BoxCollider) will remain associated with KinematicsCompound 
+    (UnityEngine.XR.Interaction.Toolkit.XRGrabInteractable), which was registered before KinematicsCompound 
+    (UnityEngine.XR.Interaction.Toolkit.XRGrabInteractable). The value returned by
+     XRInteractionManager.TryGetInteractableForCollider will be the first association.
 [x] integration tests
   - [x] hands-free latch
   - [ ] extract test support to Face() and MoveWithin()

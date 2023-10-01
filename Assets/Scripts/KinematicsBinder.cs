@@ -14,54 +14,15 @@ public class KinematicsBinder : LatchBinder
         fromBlock = fromEnd.Block;
         toBlock = toEnd.Block;
 
-        compoundParent = new GameObject
-        {
-            name = "KinematicsCompound"
-        };
+        compoundParent = new GameObject();
         var compound = compoundParent.AddComponent<KinematicsCompound>();
+        compound.Init();
 
-        // compound.Init();
+        compound.AddBlock(fromBlock);
+        compound.AddBlock(toBlock);
 
-        // NB: seem to need to add compound rigidbody before reparenting
-        // blocks under it, otherwise XRGI does not work consistently
-        var compoundRigidbody = compoundParent.AddComponent<Rigidbody>();
-        compoundRigidbody.isKinematic = true;
-        compoundRigidbody.useGravity = false;
-
-        BindIntoCompound(fromBlock, compoundParent.transform);
-        BindIntoCompound(toBlock, compoundParent.transform);
-
-        var xrgi = compoundParent.AddComponent<XRGrabInteractable>();
-        xrgi.throwOnDetach = false;
-        xrgi.useDynamicAttach = true;
-
-        FixDynamicGrabInteractableFormation(xrgi);
+        compound.CommitUpdates();
     }
-
-    private static void FixDynamicGrabInteractableFormation(XRGrabInteractable xrgi)
-    {
-        var interactable = xrgi.GetComponent<IXRInteractable>();
-        xrgi.interactionManager.RegisterInteractable(interactable);
-    }
-
-    private static void BindIntoCompound(GameObject block, Transform compoundTransform)
-    {
-        RemoveRigidbodyAndXrComponents(block);
-        block.transform.parent = compoundTransform;
-    }
-
-    private static void RemoveRigidbodyAndXrComponents(GameObject block)
-    {
-        var xrgi = block.GetComponent<XRGrabInteractable>();
-        var interactable = xrgi.GetComponent<IXRInteractable>();
-        xrgi.interactionManager.UnregisterInteractable(interactable);
-        GameObject.Destroy(xrgi);
-        var xrggt = block.GetComponent<XRGeneralGrabTransformer>();
-        GameObject.Destroy(xrggt);
-        var rigidbody = block.GetComponent<Rigidbody>();
-        GameObject.Destroy(rigidbody);
-    }
-
 
     public void Destroy()
     {
