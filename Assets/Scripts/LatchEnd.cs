@@ -42,13 +42,8 @@ public class LatchEnd : MonoBehaviour
             Debug.LogWarning("woah, i think your logic is off, not going to latch again - i'm already latched via: " + latch);
             return;
         }
-        if (this.block.name == to.block.name)
-        {
-            Debug.LogWarning("woah, i think your logic is off, you're telling me to latch to myself: " + this);
-            return;
-        }
         isInitiator = true;
-        latch = PhysicsLatch.LatchBetween(this, to);
+        latch = Latch.LatchBetween(this, to);
         magnet.OnLatch();
     }
 

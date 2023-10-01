@@ -38,7 +38,7 @@ todo
 [x] add MagneticBlock script to parent that tracks the magnets and their attachments (links? latches?)
 [x] MagneticSnapper -> Magnet ?
 [ ] latch kinematic to kinematic
-  - [ ] separate PhysicsBinder from Latch
+  - [x] separate PhysicsBinder from Latch
   - [ ] add Latch logic to select Binder
   - [ ] add KinematicsBinder
 [x] integration tests
