@@ -87,9 +87,7 @@ public class Magnet : MonoBehaviour
         if (IsThisDecidingMagnet(gameObject, collider.gameObject))
         {
             Debug.Log("I am the decider: " + thisBlock.name);
-            var signedAngle = Vector3.SignedAngle(transform.forward, collider.transform.forward, Vector3.up);
-            Debug.Log("Signed angle: " + signedAngle);
-            if (Math.Abs(signedAngle) > 165f)
+            if (ShouldAttract(collider))
             {
                 var otherMagnet = collider.gameObject;
                 otherMagnetTransform = otherMagnet.transform;
@@ -97,21 +95,42 @@ public class Magnet : MonoBehaviour
                 if (AtLeastOneBlockIsGrabbed(otherMagnet))
                 {
                     Debug.Log("one or more blocks grabbed - start snapping");
-                    ShowRealBlock(false);
-                    ShowShadowBlock(true);
-
-                    MoveShadowMagnetAlignmentHandleToFaceMagnet(otherMagnetTransform);
+                    StartSnapping(otherMagnet);
                 }
                 else
                 {
                     Debug.Log("hands free attraction -> immediate latch");
-                    ShowRealBlock(true);
-                    ShowShadowBlock(false);
-                    SnapAndLatchToOtherBlock();
-                    Debug.Log("Latched");
+                    ImmediateLatch(otherMagnet);
                 }
             }
         }
+    }
+
+    private bool ShouldAttract(Collider collider)
+    {
+        var signedAngle = Vector3.SignedAngle(transform.forward, collider.transform.forward, Vector3.up);
+        Debug.Log("Signed angle: " + signedAngle);
+        bool shouldAttract = Math.Abs(signedAngle) > 165f;
+        return shouldAttract;
+    }
+
+    private void StartSnapping(GameObject otherMagnet)
+    {
+        otherMagnetTransform = otherMagnet.transform;
+        ShowRealBlock(false);
+        ShowShadowBlock(true);
+
+        MoveShadowMagnetAlignmentHandleToFaceMagnet(otherMagnetTransform);
+    }
+
+
+    private void ImmediateLatch(GameObject otherMagnet)
+    {
+        otherMagnetTransform = otherMagnet.transform;
+        ShowRealBlock(true);
+        ShowShadowBlock(false);
+        SnapAndLatchToOtherBlock();
+        Debug.Log("Latched");
     }
 
     private bool AtLeastOneBlockIsGrabbed(GameObject otherMagnet)
