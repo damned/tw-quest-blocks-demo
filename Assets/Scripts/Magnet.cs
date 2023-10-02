@@ -89,21 +89,36 @@ public class Magnet : MonoBehaviour
             Debug.Log("I am the decider: " + thisBlock.name);
             if (ShouldAttract(collider))
             {
-                var otherMagnet = collider.gameObject;
-                otherMagnetTransform = otherMagnet.transform;
+                var otherMagnetObject = collider.gameObject;
+                var (fromMagnet, toMagnet) = DetermineFromToMagnets(otherMagnetObject);
 
-                if (AtLeastOneBlockIsGrabbed(otherMagnet))
+                if (fromMagnet.AtLeastOneBlockIsGrabbed(toMagnet.gameObject))
                 {
                     Debug.Log("one or more blocks grabbed - start snapping");
-                    StartSnapping(otherMagnet);
+                    fromMagnet.StartSnapping(toMagnet.gameObject);
                 }
                 else
                 {
                     Debug.Log("hands free attraction -> immediate latch");
-                    ImmediateLatch(otherMagnet);
+                    fromMagnet.ImmediateLatch(toMagnet.gameObject);
                 }
             }
         }
+    }
+
+    private (Magnet fromMagnet, Magnet toMagnet) DetermineFromToMagnets(GameObject otherMagnetObject)
+    {
+        Magnet otherMagnet = otherMagnetObject.GetComponent<Magnet>();
+        if (BlockIsInACompound())
+        {
+            return (otherMagnet, this);
+        }
+        return (this, otherMagnet);
+    }
+
+    private bool BlockIsInACompound()
+    {
+        return magneticBlock.InACompound();
     }
 
     private bool ShouldAttract(Collider collider)
@@ -124,7 +139,7 @@ public class Magnet : MonoBehaviour
     }
 
 
-    private void ImmediateLatch(GameObject otherMagnet)
+    public void ImmediateLatch(GameObject otherMagnet)
     {
         otherMagnetTransform = otherMagnet.transform;
         ShowRealBlock(true);
@@ -133,7 +148,7 @@ public class Magnet : MonoBehaviour
         Debug.Log("Latched");
     }
 
-    private bool AtLeastOneBlockIsGrabbed(GameObject otherMagnet)
+    public bool AtLeastOneBlockIsGrabbed(GameObject otherMagnet)
     {
         Debug.Log("other magnet: " + otherMagnet.name);
         var otherMagnetScript = MagnetScriptOf(otherMagnet);
@@ -268,4 +283,5 @@ public class Magnet : MonoBehaviour
     {
         return thisMagnet.GetInstanceID() < otherMagnet.GetInstanceID();
     }
+
 }

@@ -58,9 +58,9 @@ todo
 [x] add more blocks to kinematic compound with single hand
   - NB only works if instanceid snap precedence matches single grabbed blocks
 [ ] snap precedence:
-  - [ ] review and confine decider to initial decision
+  - [x] review and confine decider to initial decision
   - [ ] snap non-kinematic to kinematic
-  - [ ] snap single to compound
+  - [x] snap single to compound
 [x] integration tests
   - [x] hands-free latch
   - [ ] extract test support to Face() and MoveWithin()
@@ -68,7 +68,7 @@ todo
   - [ ] single hand on release
   - [ ] double-hand on release
 [x] remove manual rigging startup and variables
-[ ] fix physics to kinematics compound latching
+[ ] fix physics to kinematics compound latching - need to find rigidbody in compound rather than expect in block
 [ ] move snap recognition to separate class 
 [ ] move snapping behaviour to separate component
 [ ] unlatch behaviour tweaks:

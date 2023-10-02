@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
@@ -42,5 +43,17 @@ public class MagneticBlock : MonoBehaviour
     public bool IsGrabbed()
     {
         return isGrabbed;
+    }
+
+    public bool InACompound()
+    {
+        foreach (var magnet in magnetScripts)
+        {
+            if (magnet.IsLatched)
+            {
+                return true;
+            }
+        }
+        return false;
     }
 }
