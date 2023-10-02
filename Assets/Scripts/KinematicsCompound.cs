@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.XR.Interaction.Toolkit;
@@ -8,6 +7,8 @@ public class KinematicsCompound : MonoBehaviour
 {
     private const float TOLERANCE = 0.01f;
     private Dictionary<GameObject, GameObject> controllerToGrabbedBlock = new Dictionary<GameObject, GameObject>();
+    private XRGrabInteractable compoundInteractable;
+
 
     void Start()
     {
@@ -31,27 +32,40 @@ public class KinematicsCompound : MonoBehaviour
         var compoundRigidbody = gameObject.AddComponent<Rigidbody>();
         compoundRigidbody.isKinematic = true;
         compoundRigidbody.useGravity = false;
+
+        compoundInteractable = gameObject.AddComponent<XRGrabInteractable>();
+        compoundInteractable.throwOnDetach = false;
+        compoundInteractable.useDynamicAttach = true;
     }
 
-    public void CommitUpdates()
+    public void Commit()
     {
-        var xrgi = gameObject.AddComponent<XRGrabInteractable>();
-        xrgi.throwOnDetach = false;
-        xrgi.useDynamicAttach = true;
-
-        FixDynamicGrabInteractableFormation(xrgi);
+        ReRegister();
     }
 
-    private static void FixDynamicGrabInteractableFormation(XRGrabInteractable xrgi)
+    public void ReRegister()
     {
-        var interactable = xrgi.GetComponent<IXRInteractable>();
-        xrgi.interactionManager.RegisterInteractable(interactable);
+        Unregister();
+        Register();
+    }
+
+    private void Register()
+    {
+        var interactable = compoundInteractable.GetComponent<IXRInteractable>();
+        compoundInteractable.interactionManager.RegisterInteractable(interactable);
+    }
+
+    private void Unregister()
+    {
+        var interactable = compoundInteractable.GetComponent<IXRInteractable>();
+        compoundInteractable.interactionManager.UnregisterInteractable(interactable);
     }
 
     public void AddBlock(GameObject block)
     {
-        BindIntoCompound(block, transform);
-
+        RemovePriorRigidbodyAndXrComponents(block);
+        block.transform.parent = transform;
+        compoundInteractable.colliders.Add(block.GetComponent<Collider>());
     }
 
     public void OnGrab(SelectEnterEventArgs enterEvent)
@@ -101,13 +115,7 @@ public class KinematicsCompound : MonoBehaviour
         return interactor.transform.parent.gameObject;
     }
 
-    private static void BindIntoCompound(GameObject block, Transform compoundTransform)
-    {
-        RemoveRigidbodyAndXrComponents(block);
-        block.transform.parent = compoundTransform;
-    }
-
-    private static void RemoveRigidbodyAndXrComponents(GameObject block)
+    private static void RemovePriorRigidbodyAndXrComponents(GameObject block)
     {
         var xrgi = block.GetComponent<XRGrabInteractable>();
         var interactable = xrgi.GetComponent<IXRInteractable>();

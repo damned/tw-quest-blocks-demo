@@ -1,6 +1,4 @@
 using UnityEngine;
-using UnityEngine.XR.Interaction.Toolkit;
-using UnityEngine.XR.Interaction.Toolkit.Transformers;
 
 public class KinematicsBinder : LatchBinder
 {
@@ -14,14 +12,30 @@ public class KinematicsBinder : LatchBinder
         fromBlock = fromEnd.Block;
         toBlock = toEnd.Block;
 
-        compoundParent = new GameObject();
-        var compound = compoundParent.AddComponent<KinematicsCompound>();
-        compound.Init();
-
-        compound.AddBlock(fromBlock);
-        compound.AddBlock(toBlock);
-
-        compound.CommitUpdates();
+        var compound = fromBlock.GetComponentInParent<KinematicsCompound>();
+        if (compound != null)
+        {
+            compoundParent = compound.gameObject;
+            compound.AddBlock(toBlock);
+        }
+        else
+        {
+            compound = toBlock.GetComponentInParent<KinematicsCompound>();
+            if (compound != null)
+            {
+                compoundParent = compound.gameObject;
+                compound.AddBlock(fromBlock);
+            }
+            else
+            {
+                compoundParent = new GameObject();
+                compound = compoundParent.AddComponent<KinematicsCompound>();
+                compound.Init();
+                compound.AddBlock(fromBlock);
+                compound.AddBlock(toBlock);
+            }
+        }
+        compound.Commit();
     }
 
     public void Destroy()
@@ -32,6 +46,7 @@ public class KinematicsBinder : LatchBinder
         GameObject.Destroy(compoundParent);
     }
 
+    // TODO move to compound, add back XR grab etc.
     private static void UnbindFromCompound(GameObject block)
     {
         block.transform.parent = null;
