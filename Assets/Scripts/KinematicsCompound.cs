@@ -32,6 +32,7 @@ public class KinematicsCompound : MonoBehaviour
         var compoundRigidbody = gameObject.AddComponent<Rigidbody>();
         compoundRigidbody.isKinematic = true;
         compoundRigidbody.useGravity = false;
+        compoundRigidbody.collisionDetectionMode = CollisionDetectionMode.ContinuousDynamic;
 
         compoundInteractable = gameObject.AddComponent<XRGrabInteractable>();
         compoundInteractable.throwOnDetach = false;
