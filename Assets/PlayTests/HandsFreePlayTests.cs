@@ -6,11 +6,18 @@ using UnityEngine;
 using UnityEngine.PlayerLoop;
 using UnityEngine.TestTools;
 using UnityEngine.TestTools.Utils;
+using UnityEngine.XR.Interaction.Toolkit.TestSupport;
 
 public class HandsFreePlayTests
 {
     Vector3EqualityComparer closeEnoughVectorComparer = Vector3EqualityComparer.Instance;
     
+    [SetUp]
+    public void TearDown()
+    {
+        TestUtilities.DestroyAllSceneObjects();
+    }
+
     [SetUp]
     public void SetUp()
     {

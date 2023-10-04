@@ -172,7 +172,7 @@
     },
     "com.unity.xr.core-utils": {
       "version": "2.2.3",
-      "depth": 1,
+      "depth": 0,
       "source": "registry",
       "dependencies": {
         "com.unity.modules.xr": "1.0.0"
