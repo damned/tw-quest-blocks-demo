@@ -27,10 +27,10 @@ public class HandsFreePlayTests
     [UnityTest]
     public IEnumerator ShouldSnapAndLatchWhenBlockMovesIntoAnotherAtFacingMagnets()
     {
-        var magnet = CreateMagnetAndParentBlock();
+        var magnet = BlockBuilder.CreateMagnetAndParentBlock();
         var block = magnet.transform.parent.gameObject;
 
-        var magnet2 = CreateMagnetAndParentBlock();
+        var magnet2 = BlockBuilder.CreateMagnetAndParentBlock();
         var block2 = magnet2.transform.parent.gameObject;
         block2.transform.Translate(Vector3.forward * 2);
         block2.transform.Rotate(Vector3.up, 180f);
@@ -62,29 +62,4 @@ public class HandsFreePlayTests
         Assert.That(block.transform.position, Is.EqualTo(new Vector3(1, 1, 0)).Using(closeEnoughVectorComparer));
     }
 
-    private static GameObject CreateMagnetAndParentBlock()
-    {
-        var block = GameObject.CreatePrimitive(PrimitiveType.Cube);
-        var rigidbody = block.AddComponent<Rigidbody>();
-        rigidbody.collisionDetectionMode = CollisionDetectionMode.Continuous;
-        block.AddComponent<MagneticBlock>();
-
-        var magnet = CreateMagnetOn(block);
-        magnet.transform.Translate(magnet.transform.forward * 0.5f);
-
-        return magnet;
-    }
-
-    private static GameObject CreateMagnetOn(GameObject block)
-    {
-        var magnet = GameObject.CreatePrimitive(PrimitiveType.Sphere);
-
-        magnet.layer = LayerMask.NameToLayer("Magnets");
-        magnet.GetComponent<Collider>().isTrigger = true;
-
-        magnet.AddComponent<Magnet>();
-        magnet.transform.parent = block.transform;
-        magnet.transform.localScale = Vector3.one * 0.3f;
-        return magnet;
-    }
 }
