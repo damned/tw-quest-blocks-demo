@@ -158,6 +158,12 @@ public class Magnet : MonoBehaviour
         if (IsThisDecidingMagnet(gameObject, collider.gameObject))
         {
             DebugLog("trigger stay: I am the decider: {0}", thisBlock.name);
+            if (IsBlockInACompound() && IsBlockInACompound(collider.gameObject))
+            {
+                DebugLog("trigger stay: bailing as we're both compounds and that is not supported");
+                return;
+            }
+
             if (ShouldAttract(collider))
             {
                 var otherMagnetObject = collider.gameObject;
@@ -180,16 +186,31 @@ public class Magnet : MonoBehaviour
     private (Magnet fromMagnet, Magnet toMagnet) DetermineFromToMagnets(GameObject otherMagnetObject)
     {
         Magnet otherMagnet = otherMagnetObject.GetComponent<Magnet>();
-        if (BlockIsInACompound())
+        if (IsBlockInACompound())
         {
             return (otherMagnet, this);
         }
         return (this, otherMagnet);
     }
 
-    private bool BlockIsInACompound()
+    private bool IsBlockInACompound()
     {
-        return magneticBlock.InACompound();
+        return magneticBlock.IsInACompound();
+    }
+
+    private static bool IsBlockInACompound(GameObject otherMagnetGameObject)
+    {
+        var otherMagnet = otherMagnetGameObject.GetComponent<Magnet>();
+        if (otherMagnet == null)
+        {
+            return false;
+        }
+        return otherMagnet.IsBlockInACompound();
+    }
+
+    private bool IsBlockALeafInACompound()
+    {
+        return magneticBlock.IsALeafInACompound();
     }
 
     private bool ShouldAttract(Collider collider)
@@ -269,25 +290,24 @@ public class Magnet : MonoBehaviour
 
     public void OnRelease()
     {
-        //Debug.Log("Released: " + thisBlock.name);
+        Debug.Log("Released: " + thisBlock.name);
         if (IsSnapping())
         {
-            //Debug.Log("I do have a reference to other magnet: attempt latch and hide shadow block");
+            Debug.Log("I do have a reference to other magnet: attempt latch and hide shadow block");
             ShowRealBlock(true);
             ShowShadowBlock(false);
             SnapAndLatchToOtherBlock();
         }
         else
         {
-            //Debug.Log("Not snapping so release without latching");
+            Debug.Log("Not snapping so release without latching");
         }
     }
 
     private void ShowShadowBlock(bool showBlock)
     {
         EnsureShadowExists();
-        // shadow.block.GetComponent<Renderer>().enabled = showBlock;
-        Debug.Log(shadow.Value.block);
+        DebugLog("Making shadow block {0} visible", shadow.Value.block);
         var renderers = shadow.Value.block.GetComponentsInChildren<Renderer>();
         foreach(Renderer renderer in renderers)
         {
@@ -302,18 +322,18 @@ public class Magnet : MonoBehaviour
 
     private void SnapAndLatchToOtherBlock()
     {
-        //Debug.Log("Latching to other block, otherMagnetTransform: " + otherMagnetTransform.gameObject.name);
+        DebugLog("Latching to other block, otherMagnetTransform: {0}", otherMagnetTransform.gameObject.name);
         SnapThisBlockToOther(thisBlock, otherMagnetTransform);
 
         LatchEnd.LatchTo(otherMagnetTransform.GetComponent<Magnet>().LatchEnd);
 
-        //Debug.Log("clearing otherMagnetTransform (snapping) after latch: " + thisBlock.name);
+        DebugLog("clearing otherMagnetTransform (snapping) after latch: {0}", thisBlock.name);
         otherMagnetTransform = null; // NB could theoretically get multiple collisions... but not if blocks and magnets physically prevent it
     }
 
     public void OnLatch()
     {
-        //Debug.Log("turning off magnet collider at " + transform.localPosition + " on " + thisBlock.name);
+        Debug.Log("turning off magnet collider at " + transform.localPosition + " on " + thisBlock.name);
         MagnetCollider.enabled = false;
     }
 
@@ -328,7 +348,7 @@ public class Magnet : MonoBehaviour
 
     public void OnUnlatch()
     {
-        //Debug.Log("turning on magnet collider at " + transform.localPosition + " on " + thisBlock.name);
+        Debug.Log("turning on magnet collider at " + transform.localPosition + " on " + thisBlock.name);
         MagnetCollider.enabled = true;
     }
 

@@ -26,7 +26,13 @@ public class ShadowCreator
         }
         shadowRenderer.enabled = magnetScript.debugMode;
         shadowBlock.GetComponent<Collider>().enabled = false;
-        shadowBlock.GetComponent<Rigidbody>().useGravity = false;
+        var rigidbody = shadowBlock.GetComponent<Rigidbody>();
+        if (rigidbody == null) // e.g. if creating from block in a kinematics compound
+        {
+            rigidbody = shadowBlock.AddComponent<Rigidbody>();
+            rigidbody.isKinematic = true;
+        }
+        rigidbody.useGravity = false;
 
         Magnet shadowMagnetScript = null;
         foreach (var anyShadowMagnetScript in shadowBlock.GetComponentsInChildren<Magnet>())

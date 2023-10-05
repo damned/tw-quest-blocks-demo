@@ -45,7 +45,7 @@ public class MagneticBlock : MonoBehaviour
         return isGrabbed;
     }
 
-    public bool InACompound()
+    public bool IsInACompound()
     {
         foreach (var magnet in magnetScripts)
         {
@@ -55,5 +55,18 @@ public class MagneticBlock : MonoBehaviour
             }
         }
         return false;
+    }
+
+    public bool IsALeafInACompound()
+    {
+        int latchCount = 0;
+        foreach (var magnet in magnetScripts)
+        {
+            if (magnet.IsLatched)
+            {
+                latchCount++;
+            }
+        }
+        return latchCount == 1;
     }
 }
